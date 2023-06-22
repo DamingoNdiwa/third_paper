@@ -30,13 +30,13 @@ Following standard arguments, it is possible to show that the power posterior
 for the following Bayesian model with dataset $x = (x_1, \ldots, x_n)$
 \begin{subequations}
 \begin{align}
-x_1, \ldots, x_n &\sim \mathcal{N}(m, \sigma^2), \\
+	x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \mathcal{N}(m, \sigma^2), \\
 m &\sim \mathcal{N}(m_0, \sigma_0^2),
 \end{align}
 \end{subequations}
 is normally distributed
 \begin{equation*}
-m \;|\; x \overset{\mathrm{iid}}{\sim} \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right),
+m \;|\; x \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right),
 \end{equation*}
 where $\bar{x} = (\sum x_i)/ n$ is the sample mean. We remark that, as
 expected, the prior is recovered when $\gamma = 0$ and the classic
@@ -131,7 +131,7 @@ inverse gamma distribution
 \begin{equation*}
 \sigma^2 \; | \; x_1, \ldots, x_n \sim \text{Inv-Gamma}\left( \alpha + \frac{\gamma n}{2}, \beta + \frac{\gamma n}{2} s^2 \right). 
 \end{equation*}
-where $s^2 = \frac{1}{n} \sum_{i} \left( x_i - \mu \right)^2$ is the uncorrected sample
+where $s^2 = (\sum_{i} \left( x_i - \mu \right)^2)/n$ is the uncorrected sample
 variance. Again, setting $\gamma = 0$ recovers the prior, and setting $\gamma =
 1$ recovers the usual conjugate result for the standard Bayesian posterior.
 
