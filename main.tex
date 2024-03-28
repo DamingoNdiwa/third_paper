@@ -1,22 +1,67 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{cleveref}
+\usepackage{apacite}
+\usepackage{natbib} 
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise]{cleveref}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{verbatim}
+%\onehalfspacing
+\usepackage{float}
+\usepackage{dsfont}
+\DeclareUnicodeCharacter{03A7}{}
+
+
 
 \title{Intepretation of the Wasserstein Impact Measure}
 \author{Damian Mingo, Jack S. Hale}
 \date{June 2023}
+
+
+\usepackage{glossaries}
+\DeclareUnicodeCharacter{03A7}{}
+
+\newacronym{wim}{WIM}{Wasserstein Impact Measure}  
+\newacronym{nuts}{NUTS}{No-U-Turn sampler}  
+\newacronym{swim}{sWIM}{prior scaled Wasserstein Impact Measure}  
+\newacronym{bf}{BF}{Bayes factor}
+\newacronym{mcmc}{MCMC}{Markov Chain Monte Carlo}
+
 
 \begin{document}
 
 
 \maketitle
 
+
+\begin{abstract}
+
+To ensure parameter estimates are robust to prior specifications, it is essential to check if different priors produce varying results. We can investigate the effect of the prior on the posterior by utilizing a metric like the Wasserstein distance. Also, we need to determine if changes in parameter estimates are significant and if the priors have an impact.
+
+One way to assess the effect of the prior is by examining the power posteriors. These posteriors result from raising the likelihood function to values between 0 and 1 inclusively. When the likelihood is raised to zero, it represents the prior distribution. When it is raised to one, it is the standard posterior. By raising the likelihood to smaller values, we can control the influence of the data and observe the impact of the prior on the inference. We can then estimate the summary statistics and the Wasserstein distance for each power posterior. In this way, we can determine the Wasserstein distance at which the parameter estimates differ significantly from the known parameters. These techniques will be first applied to conjugate cases and then extended to multiple linear regression.
+
+Another approach is to scale the Wasserstein distance between two posteriors by the distance of their priors, where one of the priors is a baseline prior. This leads to the prior standardised Wasserstein Impact Measure (WIM). We can also know the prior WIM at which the parameter estimate changes from the known parameter values. 
+\end{abstract}
+
 \section{Introduction}
+
 Several measures of prior impact assessment have been developed. These measures of prior impact are usually based on divergences such as the Kullback–Leibler divergence or distances such as the Wasserstein distance. However, these distances are not directly interpretable and cannot tell us the weight of the impact of a prior distribution. We provide the weight of impact for prior distributions relative to standard normal distributions.
 
 \section{Methodology}
+The central concept in this paper is power posteriors. For Bayesian inference, the sampling distribution can be raised to values between zero and one inclusive. The resulting posteriors are known as power posteriors. Power posteriors have been used in many applications. One of such is the calculation of the marginal likelihood \citep{friel2008marginal}. They are used to calculate the objective \gls{bf} and are referred to there as fractional posteriors \citep{ohaganPropertiesIntrinsicFractional1997}. They have been applied to sample across multimodal distributions. We use the power posteriors to understand how prior impacts posterior inference. For conjugate cases, we derive and make use of analytic solutions. However, we use \gls{mcmc} to extend our approach for models with no closed-form solution. In addition, we compute the \gls{wim} of \citep{ghaderinezhadWassersteinImpactMeasure2022} and the \gls{swim} introduced in for interpretation of the impacts of priors on posterior inference.   The \gls{wim} and \gls{swim} require the calculation of Wasserstein distances between power posteriors.
+
+\begin{equation}
+p(\theta|y) =  \frac{p(y|\theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1]
+\end{equation}
+
+where $p(\theta|y)$ is the power posterior, $p(y|\theta)$ is the likelihood function, $p(\theta)$ is the prior distribution, $z$ is the marginal likelihood, and $\gamma$ is a value that controls the influence of the data.
+
+
 \subsection{Calculation of the Wasserstein distance}
 
 \subsection{Normalisation with prior distances}
@@ -162,6 +207,25 @@ where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
 \lambda \; | \; x \sim \text{Gamma} \left( \alpha + \gamma n \bar{x}, \beta + \gamma n \right)
 \end{equation}
 
+\subsection{Simple linear regression}
+    
+\begin{subequations}
+\begin{align}
+        Y|\beta_0, \beta_1,  \epsilon  &\sim \mathcal{N} (\beta_0 + \beta_1 X_1,  \epsilon)\\
+    \beta_0  &\sim \mathcal{N}(0.0, 10.0)\\
+     \beta_1  &\sim \mathcal{N}(0.0, 10.0)\\
+     \epsilon & \sim \text{IG}(1.0, 0.5)
+\end{align}
+\end{subequations}
+
+\begin{figure}
+\begin{center}
+\includegraphics{imgs/swimgamma.pdf}
+\end{center}
+\end{figure}
 \section{Conclusion}
+
+\bibliographystyle{apacite}
+\bibliography{ref}
 
 \end{document}
