@@ -11,14 +11,18 @@
 \usepackage{setspace}
 \usepackage{caption}
 \usepackage{verbatim}
+\usepackage{placeins}
 %\onehalfspacing
-\usepackage{float}
+\usepackage{subfigure}
 \usepackage{dsfont}
+\usepackage{accents}
+\usepackage{appendix} % For enhanced appendix formatting
 \DeclareUnicodeCharacter{03A7}{}
 
 
 
-\title{Interpretation of the Wasserstein Impact Measure}
+\title{Gaining insights into prior to posterior transitions through visualizations and Wasserstein distance}
+%\subtitle{Interpretation of the Wasserstein Impact Measure}
 \author{Damian Mingo, Jack S. Hale}
 \date{June 2023}
 
@@ -66,7 +70,7 @@ where $p(\theta|y)$ is the power posterior, $p(y|\theta)$ is the likelihood func
 
 \subsection{Calculation of the Wasserstein distance}
 
-\subsection{Normalisation with prior distances}
+%\subsection{Normalisation with prior distances}
 
 \subsection{Power posteriors}
 
@@ -165,6 +169,14 @@ in the normal-normal setting, we briefly contrast the power posterior approach
 with an approach based on using the standard posterior and varying the size $n$
 of the dataset.
 
+\FloatBarrier
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics{imgs/gauss_knownsigma_subsample.pdf}
+\end{center}
+\caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling. Both have the same mode and mean.}\label{fig:normal_normal_compare_with_subsampling}
+\end{figure}
+
 \subsection{Inverse-Gamma conjugate case with unknown variance}
 Following standard arguments, it is possible to show that the distribution of
 the power posterior for the following Bayesian model with dataset $x = (x_1,
@@ -193,6 +205,25 @@ cumulative distribution functions $F_1(x)$ and $F_2(x)$, respectively
 W_1(\mu_1, \mu_2) = \int_{\mathbb{R}} | F_1(x) - F_2(x) | \; \mathrm{d}x.
 \end{equation}
 
+\FloatBarrier
+\begin{figure}[ht!]
+    \centering
+    % First plot
+    \subfigure[Data distribution compared to various power posteriors]{
+        \includegraphics[width=0.45\textwidth]{imgs/data_posteriors_ivg.pdf} % Replace with your file name
+        \label{fig:invg_dist}
+    }
+    \hfill % This ensures no extra space between the subfigures
+    % Second plot
+    \subfigure[Wasserstein distance between the standard prior and power posteriors for different distributions]{
+        \includegraphics[width=0.45\textwidth]{imgs/wasserstein_distance_ivg.pdf} % Replace with your file name
+        \label{fig:invg_wasser}
+    }
+
+    \caption{Comparison of power posteriors to the data model (a) and standard prior (b) for the inverse gamma conjugate case.}
+    \label{fig:ing_conju}
+\end{figure}
+
 
 \subsection{Poisson-Gamma conjugate case with unknown rate}
 The distribution of the power posterior of the following Bayesian model with
@@ -209,20 +240,43 @@ where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
 \lambda \; | \; x \sim \text{Gamma} \left( \alpha + \gamma n \bar{x}, \beta + \gamma n \right)
 \end{equation}
 
+
+
 \begin{figure}[htbp]
-  \centering
-  \includegraphics{imgs/wasserstein_distance.pdf} 
-  \caption{Poisson-Gamma conjugate case with unknown rate; plot showing squared 2-Wasserstein metric between power posterior and prior against the power posterior parameter $\gamma \in [0, \frac{1}{2}]$ under the three different prior assumptions described in the text.} 
-  \label{fig:poisson_ga} 
+    \centering
+    % First plot
+    \subfigure[Standard prior compared to various power posteriors]{
+        \includegraphics[width=0.45\textwidth]{imgs/data_posteriors_gamma.pdf} % Replace with your file name
+        \label{fig:pois_gamma}
+    }
+    \hfill % This ensures no extra space between the subfigures
+    % Second plot
+    \subfigure[Wasserstein distance between the power posteriors and standard prior up to $\gamma=0.5$]
+{
+        \includegraphics[width=0.45\textwidth]{imgs/wasserstein_distance_gamma.pdf} % Replace with your file name
+        \label{fig:pois_gama_was}
+    }
+
+    \caption{Poisson-Gamma conjugate case with unknown rate}
+    \label{fig:poisson_ga_conju}
 \end{figure}
 
+\begin{figure}
+\begin{center}
+\includegraphics{imgs/poisson_gamma_subsample.pdf}
+\end{center}
+\caption{Distribution of the Wasserstein distance between the prior and the standard posterior ($\gamma=1.0$) with subsampling of the data and distribution of the Wasserstein distance between the power posteriors and priors. Both distributions very close with a mean of 0.65. Poisson Gamma case conjugate case.}\label{fig:poisson_gamma_sub}
+\end{figure}
 
+\begin{comment}
 \begin{figure}[htbp]
   \centering
   \includegraphics{imgs/swim_poisson_gamma_con.pdf} 
   \caption{Poisson-Gamma conjugate case with unknown rate; Plot showing the prior scale WIM between power posteriors with a non-informative prior as baseline against the power posterior parameter $\gamma \in [0, \frac{1}{2}]$. The sWIM value of 0.40 seems to be the elbow point where the plots levels off, similar to the scree plot in Principal component analysis.} 
   \label{fig:swim_poisson_ga} 
 \end{figure}
+\end{comment}
+
 \clearpage
 
 \subsection{Skew-normal distribution}
@@ -249,9 +303,6 @@ The squared Wasserstein distance between the priors and the power posteriors are
 Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We use Jeffrys prior and the Uniform prior as baseline priors for this. The results are in plots \cref{fig:swimdistskew}. We can observe that the \gls{swim} drops to zero as the prior transitions to the posterior. That is, as $\gamma$ increases from 0 to 0.5. When the Jeffreys prior is used as the baseline, the \gls{swim}  drops from 2.0 (\cref{fig:swimdistskew} A) to near zero. When the baseline is a uniform uniform prior, the \gls{swim} drops from 1.0 to closer to 0.2. Hence, one can infer that the \gls{swim} is closer to zero when there is no impact compared to a baseline prior. Also, the \gls{swim} is closer to or greater than 1.0 when the prior impact is different from the baseline prior. When the baseline prior is noninformative, a \gls{swim} value close to zero indicates the prior in question is noninformative. This is seen in (\cref{fig:swimdistskew} A), where the dashed line seems to have a constant slope very close to zero for all values of $\gamma$. The inset shows the \gls{swim} values are very close to zero. When the baseline is a uniform distribution, the \gls{swim} are below one but have a minimum value of 0.2, which is further from zero compared to when the baseline is Jefferys prior. The fact that the \gls{swim} for the Uniform and the Jeffreys prior is close to zero, as shown by the dashed line in \cref{fig:swimdistskew}A, confirms that these two priors are closest. Another interesting visual is the density plot of the priors and the power posteriors. Plots of the two closest priors, the Uniform and Jeffreys priors, illustrate how the prior density transitions to the posterior. For the Uniform prior, the mode is not visible, but as $\gamma$ starts increasing, a mode becomes visible, and the Uniform distribution starts transitioning into a skew distribution. On the other hand, the mode is visible for Jeffreys prior, but there is no skewness. As $\gamma$ increases, the mode becomes more visible, and skewness becomes visible. As the value of $\gamma$ increases, the mode becomes more peaked, and the range of the skewness parameter decreases.
 
 
-
-
-
 \begin{figure}[h]
 \begin{center}
 \includegraphics{imgs/swim_distskew.pdf}
@@ -275,6 +326,7 @@ Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We use
 \end{figure}
 
 \clearpage
+\begin{comment}
 \subsection{Simple linear regression}
 
 \begin{subequations}
@@ -298,9 +350,161 @@ Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We use
 \includegraphics{imgs/betagamma.pdf}
 \end{center}
 \end{figure}
-
+\end{comment}
 \section{Conclusion}
 \clearpage
+\begin{appendices}
+\section{Normal-normal conjugate case with unknown mean}
+\subsection{Standard posteriors,  $\gamma = 1$.}
+\begin{equation*}
+\begin{aligned}
+    x_i &|\mu\sim \mathcal{N}(\mu,\sigma^2),\quad \bar{x}= \frac{(\Sigma x_i)}{n}\\
+    &\implies \bar{x}|\mu \sim \mathcal{N}(\mu,\sigma^2)\\
+    p(x_1,\ldots,x_n|\mu)&\propto \frac{1}{\sigma}\exp\left(-\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
+    \text{Proof}\\
+    &\propto \exp\left(-\frac{1}{2\sigma^2}\sum(x_i^2-2x_i\mu +n\mu^2)\right)\\
+    &\propto \exp\left(-\frac{n}{2\sigma^2}(-2\bar{x}\mu + \mu^2)\right)\\
+     &\propto \exp\left(-\frac{n}{2\sigma^2}(\bar{x} - \mu)^2\right)\\
+     &\propto p(\bar{x}, \mu)\\
+\text{Likelihood} \\
+    x_i &|\mu\sim \mathcal{N}(\mu,\sigma^2)\\
+\text{Prior}\\
+\mu &\sim \mathcal{N}(\mu_0,\sigma^2_0)
+    \end{aligned}
+\end{equation*}
+\begin{equation*}
+\begin{aligned}
+(Z_1, Z_2) &\sim \mathcal{N}_2 \left(\mu, \Sigma \right)\\
+    E(Z_1 | Z_2) &= E(Z_1) + \frac{\text{Cov}(Z_1, Z_2)}{\text{Var}(Z_2)} \left( Z_2 - E(Z_2) \right) \\
+    \text{Var}(Z_1 | Z_2) &= \text{Var}(Z_1) - \frac{\text{Cov}(Z_1, Z_2)}{\text{Var}(Z_2)}\\
+   x &\rightarrow Z_2 \quad \mu \rightarrow Z_1\\
+   x&= \mu+\sigma\epsilon \quad \epsilon \sim N(0,1)\\
+   \mu &= \mu_0 + \sigma\delta \quad \delta \sim N(0, 1)\\
+   E(x) &= \mu_0\\
+   & \text{Var}(x) = E[\text{Var}(x \mid \mu)] + \text{Var}[E(x \mid \mu)] \\
+   & \quad = E[\sigma^2] + \text{var}(\mu) \\
+   & \quad = \sigma^2 + \sigma_0^2.\\
+    \text{Cov}(x, \mu) &= E[(x - \mu_0)(\mu - \mu_0)] \\
+    &= E[x\mu - \mu_0 \mu - \mu_0 x + \mu_0^2] \\
+    &= E[x\mu - \mu_0^2 - \mu_0 x + \mu_0^2] \\
+    &= \sigma^2 \\
+    E(\mu \mid x) &= \mu_0 + \frac{\sigma_0^2}{\sigma^2 + \sigma_0^2}(x - \mu_0) \\
+    \text{Var}(\mu \mid x) &= \frac{\sigma^2 \sigma_0^2}{\sigma^2 + \sigma_0^2} \\
+    &= \left( \frac{1}{\sigma_0^2} + \frac{1}{\sigma^2} \right)^{-1} \\
+    &= (\tau_0 + \tau)^{-1}\\
+    E(\mu \mid \bar{x}) &= \mu_0 + \frac{\sigma^2}{\sigma^2 + \sigma_0^2}(\bar{x} - \mu_0)
+\end{aligned}
+\end{equation*}
+\subsection{Power posteriors, $\gamma \in [0,1]$.}
+\begin{equation*}
+\begin{aligned}
+  p(x|\mu)^\gamma&\propto \frac{1}{\sigma}\exp\left(-\frac{1}{2\sigma^2}(x_i-\mu)^2\right)^\gamma\\
+    (e^m)^\gamma &= e^{\gamma\relax m}, \quad (ae^m)^\gamma = a^{\gamma}e^{m\gamma}\\
+p(x|\mu)^\gamma&\propto \frac{1}{\sigma\gamma}\exp\left(-\frac{\gamma}{2\sigma^2}(x-\mu)^2\right)\\
+ x &|\mu \sim \mathcal{N}\left(\mu,\frac{\sigma^2}{\gamma}\right)\\
+\bar{x} &|\mu \sim \mathcal{N}\left(\mu,\frac{\sigma^2}{\gamma\relax n}\right)\\
+    E(\mu \mid \bar{x}) &= \mu_0 + \frac{\sigma_0^2}{\frac{\sigma^2}{\gamma \relax n} + \sigma_0^2}(\bar{x} - \mu_0) \\ 
+    \text{Var}(\mu \mid \bar{x})&= \left( \frac{1}{\sigma_0^2} + \frac{\gamma\relax n}{\sigma^2} \right)^{-1} \\
+       E(\mu \mid \bar{x}) &= \frac{1}{\frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2}} 
+    + \left( \frac{\mu_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2} \right)\\
+    \text{Var}(\mu \mid \bar{x})&= \left( \frac{1}{\sigma_0^2} + \frac{\gamma\relax n}{\sigma^2} \right)^{-1} \\
+    \end{aligned}
+\end{equation*}
+\begin{equation}
+\mu \;|\; x \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{\mu_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right)
+\end{equation}
+
+\section{Inverse-Gamma conjugate case with unknown variance}
+\subsection{Standard posterior  $\gamma = 1$.}
+\begin{equation*}
+\begin{aligned}
+    p(x, \alpha,\beta) &= \frac{\beta^\alpha}{\Gamma(\alpha)} (x^2)^{-\alpha - 1} \exp\left(-\frac{\beta}{x}\right)\\
+p(x|\sigma^2) &= \frac{1}{\sigma} \exp\left(-\frac{1}{2\sigma^2} (x - \mu)^2 \right)
+    \end{aligned}
+\end{equation*}
+
+\textbf{Combine prior and likelihood}\\
+\begin{equation*}
+\begin{aligned}
+p(\sigma^2 | \alpha, \beta) &\propto p(x|\sigma^2) p(\sigma^2| \alpha,\beta)\\
+&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{-\alpha - 1} \exp\left(-\frac{\beta}{\sigma^2}\right) \frac{1}{\sigma} \exp\left(-\frac{1}{2\sigma^2} (x - \mu)^2 \right)\\
+&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{-\alpha - 1}(\sigma^2)^{-\frac{1}{2}} \exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right)\\
+&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{\alpha +\frac{1}{2} -1}\exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right)\\
+&\propto (\sigma^2)^{-\alpha +\frac{1}{2}-1}\exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right) \\
+\sigma^2 | x &\sim \text{IG}\left(\alpha + \frac{1}{2}, \beta + \frac{1}{2} (x - \mu)^2 \right)
+\end{aligned}
+\end{equation*}
+
+\textbf{Extension to multiple measurements}
+\begin{equation*}
+    \sigma^2 | x_1, \ldots, x_n \sim \text{IG}\left(\alpha + \frac{n}{2}, \beta + \frac{1}{2} \sum(x_i - \mu)^2 \right)
+\end{equation*}
+
+\begin{equation*}
+    \begin{aligned}
+        p(x_1, \ldots, x_n|\sigma^2 )= (2\pi)^{-\frac{k}{2}}\det\left(\Sigma\right)^{-\frac{1}{2}}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
+    \end{aligned}
+\end{equation*}
+\[\Sigma=\sigma^2I\]
+
+
+
+\begin{equation*}
+    \sigma^2 \mid x_1, \ldots, x_n \sim \text{IG}\left(\alpha + \frac{n}{2}, \beta + \frac{1}{2} \sum (x_i - \mu)^2 \right)
+\end{equation*}
+
+\begin{equation*}
+    \begin{aligned}
+        p(x_1, \ldots, x_n \mid \sigma^2) &= (2\pi)^{-\frac{k}{2}} \det(\Sigma)^{-\frac{1}{2}} \exp\left(-\frac{1}{2}(\underaccent{\tilde}{x} - \underaccent{\tilde}\mu)^T \Sigma^{-1} (\underaccent{\tilde}x - \underaccent{\tilde}\mu)\right)\\
+        \underaccent{=}\Sigma &= \sigma^2 I
+    \end{aligned}
+\end{equation*}
+
+\begin{equation*}
+    \begin{aligned}
+    \underaccent{=}\Sigma&=\det(\sigma^2\underaccent{=}I)(\sigma^2)^n1\\
+    &\propto(\sigma^{2n})^{-\frac{1}{2}}\exp\left(\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
+    &\propto(\sigma^{2})^{-\frac{n}{2}}\exp\left(\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)
+ \end{aligned}
+\end{equation*}
+
+\subsection{Power posteriors, $\gamma \in [0,1]$.}
+\begin{equation}
+    \begin{aligned}
+        [p(x_1, \ldots, x_n \mid \sigma^2)]^\gamma &=(\sigma^{2})^{-\frac{\gamma n}{2}}\exp\left(-\frac{\gamma}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
+        \sigma^2 &| x_1, \ldots, x_n \sim \text{IG}\left(\alpha+ \frac{\gamma n}{2}, \beta+\frac{\gamma}{2}\sum(x_i -\mu)^2\right)
+    \end{aligned}
+\end{equation}
+\end{appendices}
+\section{Poisson-Gamma conjugate case with unknown rate}
+\subsection{Standard posterior $\gamma=1$.}
+\begin{equation*}
+    \begin{aligned}
+        P(x \mid \lambda) &= Pr(x=k)\\
+ &=\frac{\lambda^ke^{-\lambda}}{k!}
+    \end{aligned}
+\end{equation*}
+
+\textbf{Multiple measurements}
+\begin{equation*}
+    \begin{aligned}
+        P(\underaccent{\tilde}x \mid \lambda) &= \prod_{i=1}^n \frac{\lambda^{x_i} e^{-\lambda}}{x_i!}\\
+        &= \frac{e^{-n \lambda}\lambda^{\sum x_i}}{\prod_{i=1}^n (x_i!)}
+    \end{aligned}
+\end{equation*}
+\subsection{Power posteriors, $\gamma \in [0,1]$.}
+\begin{equation*}
+    \begin{aligned}
+[P(\underaccent{\tilde}x \mid \lambda)]^\gamma &=  \frac{e^{-n \gamma\lambda}\lambda^{\gamma\sum x_i}}{\prod_{i=1}^n (x_i!)\gamma}\\
+         p(\lambda) &= \frac{\beta^\alpha}{\Gamma(\alpha)} \lambda^{\alpha-1} e^{-\beta \lambda},\quad \lambda >0\\
+          P(\underaccent{\tilde}x \mid \lambda)  p(\lambda)&= \lambda^{\sum x_i + \alpha - 1} e^{-(n\lambda + \beta\lambda)} \frac{\beta^\alpha}{\Gamma(\alpha)}\\
+    \end{aligned}
+\end{equation*}
+
+\begin{equation}
+    \lambda|\underaccent{\tilde}x \sim \text{Gamma}\left(\gamma\sum x_i+\alpha, \gamma n+\beta\right)
+\end{equation}
+
 \bibliographystyle{apacite}
 \bibliography{ref}
 
