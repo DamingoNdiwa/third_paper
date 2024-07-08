@@ -92,19 +92,7 @@ applied to sample across multimodal distributions. We use the power posteriors
 to understand how prior impacts posterior inference. For conjugate cases, we
 derive and make use of analytic solutions. However, we use \gls{mcmc} to extend
 our approach for models with no closed-form solution. In addition, we compute
-the \gls{wim} of \citep{ghaderinezhadWassersteinImpactMeasure2022} and the
-\gls{swim} introduced in for interpretation of the impacts of priors on
-posterior inference. 
-
-
-The \gls{wim} and \gls{swim} require the calculation of
-Wasserstein distances between power posteriors. In addition to using, \gls{wim}
-and \gls{swim}, we use graphs to visualise the impacts of priors. One of such
-plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its
-elbow-shaped curve similar to the scree plot used in principal component
-analysis. Hence, the values of \gls{swim} just before the elbow are of
-interest.
-
+the \gls{wim} of \cite{ghaderinezhadWassersteinImpactMeasure2022}, which requires the calculation of Wasserstein distances. We use graphs to illustrate the impacts of priors and how the priors transition to the posteriors.
 \section{Methodology}
 
 \subsection{Brief review of the power posterior}
