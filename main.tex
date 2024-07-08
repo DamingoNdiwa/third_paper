@@ -19,13 +19,10 @@
 \usepackage{appendix} % For enhanced appendix formatting
 \DeclareUnicodeCharacter{03A7}{}
 
-
-
-\title{Gaining insights into prior to posterior transitions through visualizations and Wasserstein distance}
-%\subtitle{Interpretation of the Wasserstein Impact Measure}
+\title{Insights into prior to posterior transition through Wasserstein
+distances and the power posterior}
 \author{Damian Mingo, Jack S. Hale}
 \date{June 2023}
-
 
 \usepackage{glossaries}
 \DeclareUnicodeCharacter{03A7}{}
@@ -81,20 +78,12 @@ distances are not directly interpretable and cannot tell us the weight of the
 impact of a prior distribution. We provide the weight of impact for prior
 distributions relative to standard normal distributions.
 
-\section{Methodology}
-The central concept in this paper is power posteriors. For Bayesian inference,
-the sampling distribution can be raised to values between zero and one
-inclusive. The resulting posteriors are known as power posteriors. For power
-posteriors, the Bayes' theorem can be restated as shown in \cref{eq:pow_pos}.
+\subsection{}
 
-\begin{equation}
-\label{eq:pow_pos}
-p(\theta|y) =  \frac{p(y|\theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1],
-\end{equation}
+\subsection{Contribution}
 
-where $p(\theta|y)$ is the power posterior, $p(y|\theta)$ is the likelihood
-function, $p(\theta)$ is the prior distribution, $z$ is the marginal
-likelihood, and $\gamma$ is a value that controls the influence of the data.
+The main contributions of this paper are as follows.
+
 Power posteriors have been used in many applications. One of such is the
 calculation of the marginal likelihood \citep{friel2008marginal}. They are used
 to calculate the objective \gls{bf} and are referred to there as fractional
@@ -105,7 +94,10 @@ derive and make use of analytic solutions. However, we use \gls{mcmc} to extend
 our approach for models with no closed-form solution. In addition, we compute
 the \gls{wim} of \citep{ghaderinezhadWassersteinImpactMeasure2022} and the
 \gls{swim} introduced in for interpretation of the impacts of priors on
-posterior inference.  The \gls{wim} and \gls{swim} require the calculation of
+posterior inference. 
+
+
+The \gls{wim} and \gls{swim} require the calculation of
 Wasserstein distances between power posteriors. In addition to using, \gls{wim}
 and \gls{swim}, we use graphs to visualise the impacts of priors. One of such
 plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its
@@ -113,11 +105,41 @@ elbow-shaped curve similar to the scree plot used in principal component
 analysis. Hence, the values of \gls{swim} just before the elbow are of
 interest.
 
+\section{Methodology}
 
+\subsection{Brief review of the power posterior}
+We briefly recall the mathematical concept of the power posterior (sometimes
+also called the fractional posterior) which is central to this paper. Let $y$
+be some observed data and $p(y\, | \, \theta)$ be the likelihood function of a
+model that depends on a set of parameters $\theta$ with associated prior
+$p(\theta)$. Moreover, let $\gamma$ be an additional \emph{power posterior
+constant} in the interval $[0, 1]$. Then the power posterior
+\citep{friel2008marginal} can be defined as
+\begin{equation}
+\label{eq:pow_pos}
+p(\theta \, | \, y,\gamma) := \frac{p(y \, | \, \theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1],
+\end{equation}
+where $z := p(y)$ is a normalising constant called the marginal likelihood. It
+is straightforward to see that for $\gamma = 0$ we recover the usual Bayesian
+prior $p(\theta)$ and for $\gamma = 1$ we recover the standard Bayesian
+posterior $p(\theta \, | y)$. We emphasise that for intermediate values $\gamma
+\in (0, 1)$ the resulting set of power posteriors forms a continuous
+transition between the standard prior and posterior distribution.
 
-\subsection{Calculation of the Wasserstein distance}
-
-%\subsection{Normalisation with prior distances}
+\subsection{Wasserstein distance}
+The definition of the $p$-Wasserstein distance ($W_p$) between two probability
+measures $\mu, \nu$ defined on the spaces $\mathcal{X}$ and $\mathcal{Y}$ is 
+\begin{equation}
+W_p(\mu, \nu) = \inf_{\pi \in U(\mu, \nu)} \left(\int_{\mathcal{X} \times \mathcal{Y}}||x-y||^pd\pi(x, y) \right)^{1/p}, \quad p\geq 1,
+\label{wasser:ana}
+\end{equation}
+where $U(\mu, \nu)$ is the set of joint probability measures on
+$\mathcal{X}\times \mathcal{Y}$ \citep{villaniOptimalTransportOld2009}. The
+Wasserstein distance has a natural intepreration as the minimum amount of work
+required to reconfigure the mass of one distributoin into another. Calculating
+the Wasserstein distance becomes non-trivial in moderate to high dimensions due
+to the ill-posed nature of the squared Euclidean distance
+\citep{cuturiMongeBregmanOccam2023}. 
 
 \subsection{Power posteriors}
 
