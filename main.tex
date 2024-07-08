@@ -45,26 +45,73 @@
 
 \begin{abstract}
 
-To ensure parameter estimates are robust to prior specifications, it is essential to check if different priors produce varying results. We can investigate the effect of the prior on the posterior by utilizing a metric like the Wasserstein distance. Also, we need to determine if changes in parameter estimates are significant and if the priors have an impact.
+To ensure parameter estimates are robust to prior specifications, it is
+essential to check if different priors produce varying results. We can
+investigate the effect of the prior on the posterior by utilizing a
+metric like the Wasserstein distance. Also, we need to determine if
+changes in parameter estimates are significant and if the priors have
+an impact.
 
-One way to assess the effect of the prior is by examining the power posteriors. These posteriors result from raising the likelihood function to values between 0 and 1 inclusively. When the likelihood is raised to zero, it represents the prior distribution. When it is raised to one, it is the standard posterior. By raising the likelihood to smaller values, we can control the influence of the data and observe the impact of the prior on the inference. We can then estimate the summary statistics and the Wasserstein distance for each power posterior. In this way, we can determine the Wasserstein distance at which the parameter estimates differ significantly from the known parameters. These techniques will be first applied to conjugate cases and then extended to multiple linear regression.
+One way to assess the effect of the prior is by examining the power
+posteriors. These posteriors result from raising the likelihood
+function to values between 0 and 1 inclusively. When the likelihood is
+raised to zero, it represents the prior distribution. When it is raised
+to one, it is the standard posterior. By raising the likelihood to
+smaller values, we can control the influence of the data and observe
+the impact of the prior on the inference. We can then estimate the
+summary statistics and the Wasserstein distance for each power
+posterior. In this way, we can determine the Wasserstein distance at
+which the parameter estimates differ significantly from the known
+parameters. These techniques will be first applied to conjugate cases
+and then extended to multiple linear regression.
 
-Another approach is to scale the Wasserstein distance between two posteriors by the distance of their priors, where one of the priors is a baseline prior. This leads to the prior standardised Wasserstein Impact Measure (WIM). We can also know the prior WIM at which the parameter estimate changes from the known parameter values. 
+Another approach is to scale the Wasserstein distance between two
+posteriors by the distance of their priors, where one of the priors is
+a baseline prior. This leads to the prior standardised Wasserstein
+Impact Measure (WIM). We can also know the prior WIM at which the
+parameter estimate changes from the known parameter values. 
 \end{abstract}
 
 \section{Introduction}
 
-Several measures of prior impact assessment have been developed. These measures of prior impact are usually based on divergences such as the Kullback–Leibler divergence or distances such as the Wasserstein distance. However, these distances are not directly interpretable and cannot tell us the weight of the impact of a prior distribution. We provide the weight of impact for prior distributions relative to standard normal distributions.
+Several measures of prior impact assessment have been developed. These measures
+of prior impact are usually based on divergences such as the Kullback–Leibler
+divergence or distances such as the Wasserstein distance. However, these
+distances are not directly interpretable and cannot tell us the weight of the
+impact of a prior distribution. We provide the weight of impact for prior
+distributions relative to standard normal distributions.
 
 \section{Methodology}
-The central concept in this paper is power posteriors. For Bayesian inference, the sampling distribution can be raised to values between zero and one inclusive. The resulting posteriors are known as power posteriors. For power posteriors, the Bayes' theorem can be restated as shown in \cref{eq:pow_pos}.
+The central concept in this paper is power posteriors. For Bayesian inference,
+the sampling distribution can be raised to values between zero and one
+inclusive. The resulting posteriors are known as power posteriors. For power
+posteriors, the Bayes' theorem can be restated as shown in \cref{eq:pow_pos}.
 
 \begin{equation}
 \label{eq:pow_pos}
 p(\theta|y) =  \frac{p(y|\theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1],
 \end{equation}
 
-where $p(\theta|y)$ is the power posterior, $p(y|\theta)$ is the likelihood function, $p(\theta)$ is the prior distribution, $z$ is the marginal likelihood, and $\gamma$ is a value that controls the influence of the data. Power posteriors have been used in many applications. One of such is the calculation of the marginal likelihood \citep{friel2008marginal}. They are used to calculate the objective \gls{bf} and are referred to there as fractional posteriors \citep{ohaganPropertiesIntrinsicFractional1997}. They have been applied to sample across multimodal distributions. We use the power posteriors to understand how prior impacts posterior inference. For conjugate cases, we derive and make use of analytic solutions. However, we use \gls{mcmc} to extend our approach for models with no closed-form solution. In addition, we compute the \gls{wim} of \citep{ghaderinezhadWassersteinImpactMeasure2022} and the \gls{swim} introduced in for interpretation of the impacts of priors on posterior inference.  The \gls{wim} and \gls{swim} require the calculation of Wasserstein distances between power posteriors. In addition to using, \gls{wim} and \gls{swim}, we use graphs to visualise the impacts of priors. One of such plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its elbow-shaped curve similar to the scree plot used in principal component analysis. Hence, the values of \gls{swim} just before the elbow are of interest.
+where $p(\theta|y)$ is the power posterior, $p(y|\theta)$ is the likelihood
+function, $p(\theta)$ is the prior distribution, $z$ is the marginal
+likelihood, and $\gamma$ is a value that controls the influence of the data.
+Power posteriors have been used in many applications. One of such is the
+calculation of the marginal likelihood \citep{friel2008marginal}. They are used
+to calculate the objective \gls{bf} and are referred to there as fractional
+posteriors \citep{ohaganPropertiesIntrinsicFractional1997}. They have been
+applied to sample across multimodal distributions. We use the power posteriors
+to understand how prior impacts posterior inference. For conjugate cases, we
+derive and make use of analytic solutions. However, we use \gls{mcmc} to extend
+our approach for models with no closed-form solution. In addition, we compute
+the \gls{wim} of \citep{ghaderinezhadWassersteinImpactMeasure2022} and the
+\gls{swim} introduced in for interpretation of the impacts of priors on
+posterior inference.  The \gls{wim} and \gls{swim} require the calculation of
+Wasserstein distances between power posteriors. In addition to using, \gls{wim}
+and \gls{swim}, we use graphs to visualise the impacts of priors. One of such
+plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its
+elbow-shaped curve similar to the scree plot used in principal component
+analysis. Hence, the values of \gls{swim} just before the elbow are of
+interest.
 
 
 
@@ -280,12 +327,25 @@ where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
 \clearpage
 
 \subsection{Skew-normal distribution}
-To gain more insight into prior impacts, we analysed the frontiers data set found in the R package sn \citep{azzalini2023}. This data set has been analysed by \cite{ghaderinezhadWassersteinImpactMeasure2022}. The data set is interesting because the maximum likelihood estimate is unrealistic. The data is generated by drawing 50 samples from a skew-normal distribution with a skewness parameter of 5. The density of a random variable $x$ that follows a skew normal distribution \citep{azzaliniClassD1985} is in \cref{skew_n}. Where $\phi$ is the standard normal probability density function, $\Phi$ is the cumulative distribution function of the standard normal distribution, $\mu$ is the location, $\sigma$ is the scale parameter and $\alpha$ is the skewness parameter.
+To gain more insight into prior impacts, we analysed the frontiers data set
+found in the R package sn \citep{azzalini2023}. This data set has been analysed
+by \cite{ghaderinezhadWassersteinImpactMeasure2022}. The data set is
+interesting because the maximum likelihood estimate is unrealistic. The data is
+generated by drawing 50 samples from a skew-normal distribution with a skewness
+parameter of 5. The density of a random variable $x$ that follows a skew normal
+distribution \citep{azzaliniClassD1985} is in \cref{skew_n}. Where $\phi$ is
+the standard normal probability density function, $\Phi$ is the cumulative
+distribution function of the standard normal distribution, $\mu$ is the
+location, $\sigma$ is the scale parameter and $\alpha$ is the skewness
+parameter.
 \begin{equation}
     f(x; \alpha) = \frac{2}{\sigma} \phi \left( \frac{x - \mu}{\sigma} \right) \Phi \left( \alpha \frac{(x - \mu)}{\sigma}  \right), \quad x \in \mathbb{R}
     \label{skew_n}
 \end{equation}
-We fit the skew-normal distribution to the data with different sets of priors for the skewness parameter as in \cite{ghaderinezhadWassersteinImpactMeasure2022}. We compare the Wasserstein distance between various power posteriors and the prior. The priors are: 
+We fit the skew-normal distribution to the data with different sets of priors
+for the skewness parameter as in
+\cite{ghaderinezhadWassersteinImpactMeasure2022}. We compare the Wasserstein
+distance between various power posteriors and the prior. The priors are: 
 \begin{itemize}
 \item Uniform prior
 \item Jeffreys prior
@@ -293,14 +353,47 @@ We fit the skew-normal distribution to the data with different sets of priors fo
 \item Beta total variation prior (BTV)
 \item Normal prior
 \end{itemize}
-The squared Wasserstein distance between the priors and the power posteriors are in \cref{fig:skew_diff_priors}. The results suggest the difference between the Uniform and the Jeffrys priors is very small. However, the distance between the prior ($\gamma=0$) and the power posteriors increases with an increase in $\gamma$ but becomes stable as $\gamma$ approaches 1. These insights are more noticeable in the \gls{swim} compared to the squared Wasserstein distances.
+The squared Wasserstein distance between the priors and the power posteriors
+are in \cref{fig:skew_diff_priors}. The results suggest the difference between
+the Uniform and the Jeffrys priors is very small. However, the distance between
+the prior ($\gamma=0$) and the power posteriors increases with an increase in
+$\gamma$ but becomes stable as $\gamma$ approaches 1. These insights are more
+noticeable in the \gls{swim} compared to the squared Wasserstein distances.
 \begin{figure}[h]
 \begin{center}
 \includegraphics{imgs/wasser_distskew.pdf}
 \end{center}
 \caption{Squared Wasserstein distance between the prior and various power posteriors for different values $\gamma \in [0, 0.5]$ on the frontiers data set.}\label{fig:skew_diff_priors}
 \end{figure}
-Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We use Jeffrys prior and the Uniform prior as baseline priors for this. The results are in plots \cref{fig:swimdistskew}. We can observe that the \gls{swim} drops to zero as the prior transitions to the posterior. That is, as $\gamma$ increases from 0 to 0.5. When the Jeffreys prior is used as the baseline, the \gls{swim}  drops from 2.0 (\cref{fig:swimdistskew} A) to near zero. When the baseline is a uniform uniform prior, the \gls{swim} drops from 1.0 to closer to 0.2. Hence, one can infer that the \gls{swim} is closer to zero when there is no impact compared to a baseline prior. Also, the \gls{swim} is closer to or greater than 1.0 when the prior impact is different from the baseline prior. When the baseline prior is noninformative, a \gls{swim} value close to zero indicates the prior in question is noninformative. This is seen in (\cref{fig:swimdistskew} A), where the dashed line seems to have a constant slope very close to zero for all values of $\gamma$. The inset shows the \gls{swim} values are very close to zero. When the baseline is a uniform distribution, the \gls{swim} are below one but have a minimum value of 0.2, which is further from zero compared to when the baseline is Jefferys prior. The fact that the \gls{swim} for the Uniform and the Jeffreys prior is close to zero, as shown by the dashed line in \cref{fig:swimdistskew}A, confirms that these two priors are closest. Another interesting visual is the density plot of the priors and the power posteriors. Plots of the two closest priors, the Uniform and Jeffreys priors, illustrate how the prior density transitions to the posterior. For the Uniform prior, the mode is not visible, but as $\gamma$ starts increasing, a mode becomes visible, and the Uniform distribution starts transitioning into a skew distribution. On the other hand, the mode is visible for Jeffreys prior, but there is no skewness. As $\gamma$ increases, the mode becomes more visible, and skewness becomes visible. As the value of $\gamma$ increases, the mode becomes more peaked, and the range of the skewness parameter decreases.
+Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We
+use Jeffrys prior and the Uniform prior as baseline priors for this. The
+results are in plots \cref{fig:swimdistskew}. We can observe that the
+\gls{swim} drops to zero as the prior transitions to the posterior. That is, as
+$\gamma$ increases from 0 to 0.5. When the Jeffreys prior is used as the
+baseline, the \gls{swim}  drops from 2.0 (\cref{fig:swimdistskew} A) to near
+zero. When the baseline is a uniform uniform prior, the \gls{swim} drops from
+1.0 to closer to 0.2. Hence, one can infer that the \gls{swim} is closer to
+zero when there is no impact compared to a baseline prior. Also, the \gls{swim}
+is closer to or greater than 1.0 when the prior impact is different from the
+baseline prior. When the baseline prior is noninformative, a \gls{swim} value
+close to zero indicates the prior in question is noninformative. This is seen
+in (\cref{fig:swimdistskew} A), where the dashed line seems to have a constant
+slope very close to zero for all values of $\gamma$. The inset shows the
+\gls{swim} values are very close to zero. When the baseline is a uniform
+distribution, the \gls{swim} are below one but have a minimum value of 0.2,
+which is further from zero compared to when the baseline is Jefferys prior. The
+fact that the \gls{swim} for the Uniform and the Jeffreys prior is close to
+zero, as shown by the dashed line in \cref{fig:swimdistskew}A, confirms that
+these two priors are closest. Another interesting visual is the density plot of
+the priors and the power posteriors. Plots of the two closest priors, the
+Uniform and Jeffreys priors, illustrate how the prior density transitions to
+the posterior. For the Uniform prior, the mode is not visible, but as $\gamma$
+starts increasing, a mode becomes visible, and the Uniform distribution starts
+transitioning into a skew distribution. On the other hand, the mode is visible
+for Jeffreys prior, but there is no skewness. As $\gamma$ increases, the mode
+becomes more visible, and skewness becomes visible. As the value of $\gamma$
+increases, the mode becomes more peaked, and the range of the skewness
+parameter decreases.
 
 
 \begin{figure}[h]
