@@ -85,28 +85,33 @@ the impacts of priors and how the priors transition to the posteriors.
 
 \subsection{Contribution}
 
-The main contributions of this paper are as follows.
-
-Using the concept of the power posterior we construct a continuous family of
-posteriors between prior and posterior where the usual likelihood is raised to
-a varying parameter $\gamma \in [0, 1]$. We give an initial visual idea of this
-transition in \cref{fig:skew_normal_powpos} where we show density plots of the
-power posteriors induced by various $\gamma$ values as 
+The main contributions of this paper are as follows. Using the concept of the
+power posterior we construct a continuous family of posteriors between prior
+and posterior where the usual likelihood is raised to a power posterior constant
+$\gamma \in [0, 1]$. To give a visual intuition of this idea, in
+\cref{fig:skew_normal_powpos} we show posterior density plots of the power
+posteriors living between a uniform prior the standard posterior for a parameter
+describing the skewness of a dataset.
 
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/uniform_pow.pdf}
 \end{center}
 \caption{Marginal posteriors for the skewness parameter show the transition
-	from Uniform prior ($\gamma=0$) to various power posteriors
-	($0< \gamma \leq 0.5$). Posterior based on the frontier data set for the
+	from a uniform prior ($\gamma=0$) to various power posteriors
+	($0 < \gamma \leq 0.5$). Posterior based on the frontier data set for the
 	skew-normal distribution.}\label{fig:skew_normal_powpos}
 \end{figure}
 
-We then derive conjugate results for the power posterior including the Normal,
-Inverse-Gamma and Poisson-Gamma cases. For a dataset of size $n$ these
-conjugate results give an intepretation of the product $\gamma n$ as the
-effective sample size. This intepretation
+From this definition of the power posterior we derive extensions of three standard
+conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
+Poisson-Gamma cases. For an observed data set of size $n$ these conjugate
+results give a clear reason to interpret the product $\gamma n$ as the
+effective sample size of the observed data, that is, $\gamma$ can be used to
+reduce the sample size of the data from $n$ to $n\gamma$.
+
+We then observe the Wasserstein distance between power posterior measures
+$\mu_{\gamma}$ for fixed $\gamma$ and the prior measure $\gamma_0$ to  
 
 \jsh{Via both numerical and analytical examples we demonstrate that the
 Wasserstein distance between the power posterior and the prior can provide}
@@ -121,7 +126,7 @@ interest.
 
 \section{Methodology}
 
-\subsection{Brief review of the power posterior}
+\subsection{Power posterior}
 We briefly recall the mathematical concept of the power posterior (sometimes
 also called the fractional posterior) which is central to this paper. Let $y$
 be some observed data and $p(y\, | \, \theta)$ be the likelihood function of a
@@ -155,9 +160,11 @@ the Wasserstein distance becomes non-trivial in moderate to high dimensions due
 to the ill-posed nature of the squared Euclidean distance
 \citep{cuturiMongeBregmanOccam2023}. 
 
-\subsection{Posterior measures
+\subsection{Posterior measures}
 
-\section{Examples}
+\subsection{Numerical details}
+
+\section{Results}
 
 \subsection{Normal-normal conjugate case with unknown mean}
 Following standard arguments, it is possible to show that the distribution of
