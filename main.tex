@@ -1,28 +1,33 @@
 \documentclass[12pt]{article}
-\usepackage{graphicx} % Required for inserting images
+
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{apacite}
 \usepackage{natbib} 
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
-\usepackage[capitalise]{cleveref}
+\usepackage{cleveref}
 \usepackage[utf8]{inputenc}
 \usepackage{setspace}
 \usepackage{caption}
 \usepackage{verbatim}
 \usepackage{placeins}
-%\onehalfspacing
 \usepackage{subfigure}
 \usepackage{dsfont}
 \usepackage{accents}
 \usepackage{appendix} % For enhanced appendix formatting
+\usepackage{todonotes}
 \DeclareUnicodeCharacter{03A7}{}
 
-\title{Insights into prior to posterior transition through Wasserstein
+\onehalfspacing
+
+\newcommand{\jsh}[1]{\todo[inline,color=green!20, caption={2do}]{\textbf{Jack:}\\#1}}
+
+\title{Understanding prior to posterior transition through Wasserstein
 distances and the power posterior}
 \author{Damian Mingo, Jack S. Hale}
-\date{June 2023}
+\date{\today}
 
 \usepackage{glossaries}
 \DeclareUnicodeCharacter{03A7}{}
@@ -42,34 +47,22 @@ distances and the power posterior}
 
 \begin{abstract}
 
-To ensure parameter estimates are robust to prior specifications, it is
-essential to check if different priors produce varying results. We can
-investigate the effect of the prior on the posterior by utilizing a
-metric like the Wasserstein distance. Also, we need to determine if
-changes in parameter estimates are significant and if the priors have
-an impact.
+To ensure parameter estimates are robust to the specification of the prior it
+is essential to check if different priors produce varying results. The recently
+introduced Wasserstein Impact Measure measures the distance between two posteriors
+induced
 
-One way to assess the effect of the prior is by examining the power
-posteriors. These posteriors result from raising the likelihood
-function to values between 0 and 1 inclusively. When the likelihood is
-raised to zero, it represents the prior distribution. When it is raised
-to one, it is the standard posterior. By raising the likelihood to
-smaller values, we can control the influence of the data and observe
-the impact of the prior on the inference. We can then estimate the
-summary statistics and the Wasserstein distance for each power
-posterior. In this way, we can determine the Wasserstein distance at
-which the parameter estimates differ significantly from the known
-parameters. These techniques will be first applied to conjugate cases
-and then extended to multiple linear regression.
-
-Another approach is to scale the Wasserstein distance between two
-posteriors by the distance of their priors, where one of the priors is
-a baseline prior. This leads to the prior standardised Wasserstein
-Impact Measure (WIM). We can also know the prior WIM at which the
-parameter estimate changes from the known parameter values. 
 \end{abstract}
 
 \section{Introduction}
+
+\jsh{Opening paragraph - similar to paper 2}
+
+\jsh{Narrow in on WIM. Measures distances between posteriors which are prior +
+data (via likelihood).}
+
+\jsh{Discuss new idea. Examine the continuous transition between prior and
+posterior via the likelihood.}
 
 Several measures of prior impact assessment have been developed. These measures
 of prior impact are usually based on divergences such as the Kullback–Leibler
@@ -77,12 +70,6 @@ divergence or distances such as the Wasserstein distance. However, these
 distances are not directly interpretable and cannot tell us the weight of the
 impact of a prior distribution. We provide the weight of impact for prior
 distributions relative to standard normal distributions.
-
-\subsection{}
-
-\subsection{Contribution}
-
-The main contributions of this paper are as follows.
 
 Power posteriors have been used in many applications. One of such is the
 calculation of the marginal likelihood \citep{friel2008marginal}. They are used
@@ -92,7 +79,46 @@ applied to sample across multimodal distributions. We use the power posteriors
 to understand how prior impacts posterior inference. For conjugate cases, we
 derive and make use of analytic solutions. However, we use \gls{mcmc} to extend
 our approach for models with no closed-form solution. In addition, we compute
-the \gls{wim} of \cite{ghaderinezhadWassersteinImpactMeasure2022}, which requires the calculation of Wasserstein distances. We use graphs to illustrate the impacts of priors and how the priors transition to the posteriors.
+the \gls{wim} of \cite{ghaderinezhadWassersteinImpactMeasure2022}, which
+requires the calculation of Wasserstein distances. We use graphs to illustrate
+the impacts of priors and how the priors transition to the posteriors.
+
+\subsection{Contribution}
+
+The main contributions of this paper are as follows.
+
+Using the concept of the power posterior we construct a continuous family of
+posteriors between prior and posterior where the usual likelihood is raised to
+a varying parameter $\gamma \in [0, 1]$. We give an initial visual idea of this
+transition in \cref{fig:skew_normal_powpos} where we show density plots of the
+power posteriors induced by various $\gamma$ values as 
+
+\begin{figure}
+\begin{center}
+\includegraphics{imgs/uniform_pow.pdf}
+\end{center}
+\caption{Marginal posteriors for the skewness parameter show the transition
+	from Uniform prior ($\gamma=0$) to various power posteriors
+	($0< \gamma \leq 0.5$). Posterior based on the frontier data set for the
+	skew-normal distribution.}\label{fig:skew_normal_powpos}
+\end{figure}
+
+We then derive conjugate results for the power posterior including the Normal,
+Inverse-Gamma and Poisson-Gamma cases. For a dataset of size $n$ these
+conjugate results give an intepretation of the product $\gamma n$ as the
+effective sample size. This intepretation
+
+\jsh{Via both numerical and analytical examples we demonstrate that the
+Wasserstein distance between the power posterior and the prior can provide}
+
+The \gls{wim} and \gls{swim} require the calculation of
+Wasserstein distances between power posteriors. In addition to using, \gls{wim}
+and \gls{swim}, we use graphs to visualise the impacts of priors. One of such
+plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its
+elbow-shaped curve similar to the scree plot used in principal component
+analysis. Hence, the values of \gls{swim} just before the elbow are of
+interest.
+
 \section{Methodology}
 
 \subsection{Brief review of the power posterior}
@@ -129,7 +155,7 @@ the Wasserstein distance becomes non-trivial in moderate to high dimensions due
 to the ill-posed nature of the squared Euclidean distance
 \citep{cuturiMongeBregmanOccam2023}. 
 
-\subsection{Power posteriors}
+\subsection{Posterior measures
 
 \section{Examples}
 
@@ -369,12 +395,16 @@ the Uniform and the Jeffrys priors is very small. However, the distance between
 the prior ($\gamma=0$) and the power posteriors increases with an increase in
 $\gamma$ but becomes stable as $\gamma$ approaches 1. These insights are more
 noticeable in the \gls{swim} compared to the squared Wasserstein distances.
-\begin{figure}[h]
+\jsh{This plot is huge, please make it smaller}.
+\begin{figure}
 \begin{center}
 \includegraphics{imgs/wasser_distskew.pdf}
 \end{center}
-\caption{Squared Wasserstein distance between the prior and various power posteriors for different values $\gamma \in [0, 0.5]$ on the frontiers data set.}\label{fig:skew_diff_priors}
+\caption{Squared Wasserstein distance between the prior and various power
+posteriors for different values $\gamma \in [0, 0.5]$ on the frontiers
+data set.}\label{fig:skew_diff_priors}
 \end{figure}
+\jsh{Remove sWIM - confuses matters?}
 Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We
 use Jeffrys prior and the Uniform prior as baseline priors for this. The
 results are in plots \cref{fig:swimdistskew}. We can observe that the
@@ -406,7 +436,7 @@ increases, the mode becomes more peaked, and the range of the skewness
 parameter decreases.
 
 
-\begin{figure}[h]
+\begin{figure}
 \begin{center}
 \includegraphics{imgs/swim_distskew.pdf}
 \end{center}
@@ -414,14 +444,6 @@ parameter decreases.
 \end{figure}
 
 \begin{figure}
-\begin{center}
-\includegraphics{imgs/uniform_pow.pdf}
-\end{center}
-\caption{Marginal posteriors for the skewness parameter show the transition from Uniform prior ($\gamma=0$) to various power posteriors ($0<\gamma\leq1$).  Posterior based on the frontier data set for the skew-normal distribution.}\label{fig:skew_normal_powpos}
-\end{figure}
-
-
-\begin{figure}[h]
 \begin{center}
 \includegraphics{imgs/Jeffreys.pdf}
 \end{center}
@@ -498,6 +520,7 @@ parameter decreases.
     E(\mu \mid \bar{x}) &= \mu_0 + \frac{\sigma^2}{\sigma^2 + \sigma_0^2}(\bar{x} - \mu_0)
 \end{aligned}
 \end{equation*}
+
 \subsection{Power posteriors, $\gamma \in [0,1]$.}
 \begin{equation*}
 \begin{aligned}
