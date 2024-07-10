@@ -56,12 +56,12 @@ induced
 
 \section{Introduction}
 
-\jsh{Opening paragraph - similar to paper 2}
+\jsh{JSH TODO: Opening paragraph - similar to paper 2}
 
-\jsh{Narrow in on WIM. Measures distances between posteriors which are prior +
+\jsh{JSH TODO: Narrow in on WIM. Measures distances between posteriors which are prior +
 data (via likelihood). Explain what the WIM doesn't do.}
 
-\jsh{Discuss new idea. Examine the continuous transition between prior and
+\jsh{JSH: TODO: Discuss new idea. Examine the continuous transition between prior and
 posterior via the likelihood.}
 
 Several measures of prior impact assessment have been developed. These measures
@@ -93,7 +93,7 @@ $\gamma \in [0, 1]$. To give a visual intuition of this transition, in
 posteriors living between a uniform prior the standard posterior for a
 parameter describing the skewness of a dataset.
 
-\jsh{Expand on last comment about plot}
+\jsh{JSH: Expand on last comment about plot}
 
 \begin{figure}
 \begin{center}
@@ -168,8 +168,14 @@ to the ill-posed nature of the squared Euclidean distance
 \citep{cuturiMongeBregmanOccam2023}. 
 
 \subsection{Posterior measures}
+\jsh{Define all of the varios measures}
 
-\subsection{Numerical details}
+\subsection{Subsampling}
+\jsh{Write definition of subsampling}
+
+\subsection{Numerical methods}
+\jsh{Brief summary of numerical methods and how they are implemented, no major
+details}
 
 \section{Results}
 
@@ -321,7 +327,7 @@ W_1(\mu_1, \mu_2) = \int_{\mathbb{R}} | F_1(x) - F_2(x) | \; \mathrm{d}x.
     \caption{Comparison of power posteriors to the data model (a) and standard prior (b) for the inverse gamma conjugate case.}
     \label{fig:ing_conju}
 \end{figure}
-
+\jsh{I cannot distinguish between the two blues}
 
 \subsection{Poisson-Gamma conjugate case with unknown rate}
 The distribution of the power posterior of the following Bayesian model with
@@ -348,7 +354,6 @@ where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
         \label{fig:pois_gamma}
     }
     \hfill % This ensures no extra space between the subfigures
-    % Second plot
     \subfigure[Wasserstein distance between the power posteriors and standard prior up to $\gamma=0.5$]
 {
         \includegraphics[width=0.45\textwidth]{imgs/wasserstein_distance_gamma.pdf} % Replace with your file name
@@ -358,19 +363,35 @@ where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
     \caption{Poisson-Gamma conjugate case with unknown rate}
     \label{fig:poisson_ga_conju}
 \end{figure}
+\jsh{Plots are too small}
 
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/poisson_gamma_subsample.pdf}
 \end{center}
-\caption{Distribution of the Wasserstein distance between the prior and the standard posterior ($\gamma=1.0$) with subsampling of the data and distribution of the Wasserstein distance between the power posteriors and priors. Both distributions very close with a mean of 0.65. Poisson Gamma case conjugate case.}\label{fig:poisson_gamma_sub}
+\caption{Distribution of the Wasserstein distance between the prior and the
+	standard posterior ($\gamma=1.0$) with subsampling of the data and
+	distribution of the Wasserstein distance between the power posteriors
+	and priors. Both distributions very close with a mean of 0.65. Poisson
+	Gamma case conjugate case.}\label{fig:poisson_gamma_sub}
 \end{figure}
+\jsh{I do not understand how the Wasserstein distance between the power
+posterior and prior can be a random variable (and hence be plotted as a
+distribution). The calculation is 'deterministic' if the prior and power
+posterior chains are well converged.}
+\jsh{I don't see the necessity of 'and prior' in the legend.}
+\jsh{Text of x and y labels is crazy large, also on other plots}
 
 \begin{comment}
 \begin{figure}[htbp]
   \centering
   \includegraphics{imgs/swim_poisson_gamma_con.pdf} 
-  \caption{Poisson-Gamma conjugate case with unknown rate; Plot showing the prior scale WIM between power posteriors with a non-informative prior as baseline against the power posterior parameter $\gamma \in [0, \frac{1}{2}]$. The sWIM value of 0.40 seems to be the elbow point where the plots levels off, similar to the scree plot in Principal component analysis.} 
+  \caption{Poisson-Gamma conjugate case with unknown rate; Plot showing the
+	prior scale WIM between power posteriors with a non-informative prior
+	as baseline against the power posterior parameter $\gamma \in [0,
+	\frac{1}{2}]$. The sWIM value of 0.40 seems to be the elbow point where
+	the plots levels off, similar to the scree plot in Principal component
+	analysis.} 
   \label{fig:swim_poisson_ga} 
 \end{figure}
 \end{comment}
@@ -393,10 +414,14 @@ parameter.
     f(x; \alpha) = \frac{2}{\sigma} \phi \left( \frac{x - \mu}{\sigma} \right) \Phi \left( \alpha \frac{(x - \mu)}{\sigma}  \right), \quad x \in \mathbb{R}
     \label{skew_n}
 \end{equation}
+\jsh{You should not use the reference functionality to introduce an equation
+directly next to its definition. Place definitions of parameters afterwards
+(see Christophe's paper)}
+
 We fit the skew-normal distribution to the data with different sets of priors
 for the skewness parameter as in
 \cite{ghaderinezhadWassersteinImpactMeasure2022}. We compare the Wasserstein
-distance between various power posteriors and the prior. The priors are: 
+distance between various power posteriors and the prior. The priors are:
 \begin{itemize}
 \item Uniform prior
 \item Jeffreys prior
@@ -404,6 +429,7 @@ distance between various power posteriors and the prior. The priors are:
 \item Beta total variation prior (BTV)
 \item Normal prior
 \end{itemize}
+\jsh{Seems unnecessary to use an explicit list incorporate into a sentence.}
 The squared Wasserstein distance between the priors and the power posteriors
 are in \cref{fig:skew_diff_priors}. The results suggest the difference between
 the Uniform and the Jeffrys priors is very small. However, the distance between
@@ -419,7 +445,8 @@ noticeable in the \gls{swim} compared to the squared Wasserstein distances.
 posteriors for different values $\gamma \in [0, 0.5]$ on the frontiers
 data set.}\label{fig:skew_diff_priors}
 \end{figure}
-\jsh{Remove sWIM - confuses matters?}
+\jsh{Plot too big. No intepretation/discussion of result in figure caption.}
+\jsh{I would remove this stuff on sWIM entirely as discussed.}
 Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We
 use Jeffrys prior and the Uniform prior as baseline priors for this. The
 results are in plots \cref{fig:swimdistskew}. We can observe that the
@@ -455,14 +482,23 @@ parameter decreases.
 \begin{center}
 \includegraphics{imgs/swim_distskew.pdf}
 \end{center}
-\caption{Prior scale WIM for the skewness parameter of the skew normal distribution with \textbf{(A)} Jeffrys prior as the baseline prior and \textbf{(B)} the uniform prior as the baseline prior. For (A), 0.40 is the sWIM value at which the elbow levels off similar to principal component analysis.}\label{fig:swimdistskew}
+\caption{Prior scale WIM for the skewness parameter of the skew normal
+	distribution with \textbf{(A)} Jeffrys prior as the baseline prior and
+	\textbf{(B)} the uniform prior as the baseline prior. For (A), 0.40 is
+	the sWIM value at which the elbow levels off similar to principal
+	component analysis.}\label{fig:swimdistskew}
 \end{figure}
+\jsh{I do not understand what is plotted here - the sWIM is defined between
+posterior measures, not posterior and prior measures}
 
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/Jeffreys.pdf}
 \end{center}
-\caption{Marginal posteriors for the skewness parameter show the transition from Jeffreys prior ($\gamma=0$) to various power posteriors ($0<\gamma\leq1$).  Posterior based on the frontier data set for the skew-normal distribution. }\label{fig:skew_jeff_powpos}
+\caption{Marginal posteriors for the skewness parameter show the transition
+	from Jeffreys prior ($\gamma=0$) to various power posteriors
+	($0<\gamma\leq1$).  Posterior based on the frontier data set for the
+	skew-normal distribution. }\label{fig:skew_jeff_powpos}
 \end{figure}
 
 \clearpage
@@ -494,8 +530,16 @@ parameter decreases.
 \section{Conclusion}
 \clearpage
 \begin{appendices}
+\jsh{These appendices are not referenced in the main text}
 \section{Normal-normal conjugate case with unknown mean}
 \subsection{Standard posteriors,  $\gamma = 1$.}
+\jsh{All cases: Once you have the derivations for the standard result which do
+not need to be repeated, these are three or four line proofs.}
+\jsh{Use ams theorem environment}
+\jsh{There is no statement of what you will prove, or definitions of any of the terms}
+\jsh{There is no explanation or text to explain these derivations. This is a totally standard result and should just be repeated 'as a matter of fact'.}
+\jsh{Aren't the likelihood and prior specified?}
+\jsh{You cannot split equations across the result and its proof}
 \begin{equation*}
 \begin{aligned}
     x_i &|\mu\sim \mathcal{N}(\mu,\sigma^2),\quad \bar{x}= \frac{(\Sigma x_i)}{n}\\
@@ -537,6 +581,7 @@ parameter decreases.
 \end{equation*}
 
 \subsection{Power posteriors, $\gamma \in [0,1]$.}
+\jsh{Third equation is incorrect}
 \begin{equation*}
 \begin{aligned}
   p(x|\mu)^\gamma&\propto \frac{1}{\sigma}\exp\left(-\frac{1}{2\sigma^2}(x_i-\mu)^2\right)^\gamma\\
@@ -556,6 +601,7 @@ p(x|\mu)^\gamma&\propto \frac{1}{\sigma\gamma}\exp\left(-\frac{\gamma}{2\sigma^2
 \end{equation}
 
 \section{Inverse-Gamma conjugate case with unknown variance}
+\jsh{These results are all standard and can just be summarised}
 \subsection{Standard posterior  $\gamma = 1$.}
 \begin{equation*}
 \begin{aligned}
@@ -565,6 +611,7 @@ p(x|\sigma^2) &= \frac{1}{\sigma} \exp\left(-\frac{1}{2\sigma^2} (x - \mu)^2 \ri
 \end{equation*}
 
 \textbf{Combine prior and likelihood}\\
+\jsh{Again, these results are standard so you can just repeat them, then explain the reasoning/logic behind the power posterior}
 \begin{equation*}
 \begin{aligned}
 p(\sigma^2 | \alpha, \beta) &\propto p(x|\sigma^2) p(\sigma^2| \alpha,\beta)\\
@@ -642,6 +689,7 @@ p(\sigma^2 | \alpha, \beta) &\propto p(x|\sigma^2) p(\sigma^2| \alpha,\beta)\\
     \end{aligned}
 \end{equation*}
 
+\jsh{Remove under accent tildes, not necessary}
 \begin{equation}
     \lambda|\underaccent{\tilde}x \sim \text{Gamma}\left(\gamma\sum x_i+\alpha, \gamma n+\beta\right)
 \end{equation}
