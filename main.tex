@@ -24,7 +24,7 @@
 
 \newcommand{\jsh}[1]{\todo[inline,color=green!20, caption={2do}]{\textbf{Jack:}\\#1}}
 
-\title{Understanding prior to posterior transition through Wasserstein
+\title{Insights into the prior to posterior transition through Wasserstein
 distances and the power posterior}
 \author{Damian Mingo, Jack S. Hale}
 \date{\today}
@@ -59,7 +59,7 @@ induced
 \jsh{Opening paragraph - similar to paper 2}
 
 \jsh{Narrow in on WIM. Measures distances between posteriors which are prior +
-data (via likelihood).}
+data (via likelihood). Explain what the WIM doesn't do.}
 
 \jsh{Discuss new idea. Examine the continuous transition between prior and
 posterior via the likelihood.}
@@ -87,11 +87,13 @@ the impacts of priors and how the priors transition to the posteriors.
 
 The main contributions of this paper are as follows. Using the concept of the
 power posterior we construct a continuous family of posteriors between prior
-and posterior where the usual likelihood is raised to a power posterior constant
-$\gamma \in [0, 1]$. To give a visual intuition of this idea, in
+and posterior by raising the usual likelihood to a power posterior constant
+$\gamma \in [0, 1]$. To give a visual intuition of this transition, in
 \cref{fig:skew_normal_powpos} we show posterior density plots of the power
-posteriors living between a uniform prior the standard posterior for a parameter
-describing the skewness of a dataset.
+posteriors living between a uniform prior the standard posterior for a
+parameter describing the skewness of a dataset.
+
+\jsh{Expand on last comment about plot}
 
 \begin{figure}
 \begin{center}
@@ -103,26 +105,31 @@ describing the skewness of a dataset.
 	skew-normal distribution.}\label{fig:skew_normal_powpos}
 \end{figure}
 
-From this definition of the power posterior we derive extensions of three standard
-conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
-Poisson-Gamma cases. For an observed data set of size $n$ these conjugate
-results give a clear reason to interpret the product $\gamma n$ as the
-effective sample size of the observed data, that is, $\gamma$ can be used to
-reduce the sample size of the data from $n$ to $n\gamma$.
+From the definition of the power posterior we derive extensions of three
+standard conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
+Poisson-Gamma cases. These conjugate results show that for an observed data set
+of size $n$ the product $\gamma n$ as the effective sample size of the observed
+data, that is, $\gamma$ can be used to reduce the sample size of the data from
+$n$ to $n\gamma$. An alternative intepretation, which can be seen by writing
+the log-likelihood, is that $\gamma$ controls the relative weight of the
+log-likelihood (and consequently the data) with respect to the log-prior.
 
-We then observe the Wasserstein distance between power posterior measures
-$\mu_{\gamma}$ for fixed $\gamma$ and the prior measure $\gamma_0$ to  
+With the definition of the power posterior in hand we then observe the
+evolution of the Wasserstein distance between power posterior measures
+$\mu_{\gamma}$ and the fixed prior measure $\mu_{0}$. These plots typically
+show a sudden change in the Wasserstein distance as $\gamma$ is increased just
+beyond zero (the prior is moved a large distance by a small effective sample
+size of the data). As $\gamma$ is increased at some point the distance
+`saturates' and increasing $\gamma$ further (i.e. increasing the effective
+sample size) does not lead to the posterior moving significantly further away
+from the prior. This saturation region gives us an indication of a saturation
+sample size, that is, at which adding more data into the problem (implicitly
+via the parameter $\gamma$) does not lead to an increase in the distance
+between the power posterior and the prior.
 
-\jsh{Via both numerical and analytical examples we demonstrate that the
-Wasserstein distance between the power posterior and the prior can provide}
-
-The \gls{wim} and \gls{swim} require the calculation of
-Wasserstein distances between power posteriors. In addition to using, \gls{wim}
-and \gls{swim}, we use graphs to visualise the impacts of priors. One of such
-plots is the \gls{swim} vs $\gamma$. This plot is interesting because of its
-elbow-shaped curve similar to the scree plot used in principal component
-analysis. Hence, the values of \gls{swim} just before the elbow are of
-interest.
+In addition to looking at an prior to posterior transition for a single fixed
+prior, we also look at the evolution of the Wasserstein distance under
+different prior assumptions.
 
 \section{Methodology}
 
@@ -213,6 +220,7 @@ squared Wasserstein distance with respect to $\gamma$ given by
 p^{-\frac{15}{2}}n \sigma_{0}^{2} \left(- p^{\frac{11}{2}} \sigma^{2} \sigma_{0}^{2} - 2 p^{\frac{9}{2}} \left(- \gamma n \sigma_{0}^{2} \bar{x} + m_{0} p - m_{0} \sigma^{2}\right) \left(- \gamma n \sigma_{0}^{2} \bar{x} - m_{0} \sigma^{2} + p \bar{x}\right) + p^{6} \sigma \sigma_{0}^{2}\right).
 \end{equation*}
 \normalsize
+\jsh{Consider moving this to an appendix}
 Letting $\gamma = 0$ it can be verified that $W_2(\mu_0, \mu_0)^2 = 0$, as
 expected, and also that $\frac{d}{d\gamma}[W_2(\mu_0, \mu_0)^2] = 0$. 
 
