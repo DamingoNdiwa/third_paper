@@ -185,7 +185,7 @@ the power posterior for the following Bayesian model with dataset $x = (x_1,
 \ldots, x_n)$
 \begin{subequations}
 \begin{align}
-	x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \mathcal{N}(m, \sigma^2), \\
+x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \mathcal{N}(m, \sigma^2), \\
 m &\sim \mathcal{N}(m_0, \sigma_0^2),
 \end{align}
 \end{subequations}
@@ -273,6 +273,8 @@ in the normal-normal setting, we briefly contrast the power posterior approach
 with an approach based on using the standard posterior and varying the size $n$
 of the dataset.
 
+\jsh{JSH: To complete description of subsampling}
+
 \FloatBarrier
 \begin{figure}[ht!]
 \begin{center}
@@ -330,6 +332,9 @@ W_1(\mu_1, \mu_2) = \int_{\mathbb{R}} | F_1(x) - F_2(x) | \; \mathrm{d}x.
 \jsh{I cannot distinguish between the two blues}
 
 \subsection{Poisson-Gamma conjugate case with unknown rate}
+\jsh{There is no description or analysis of these experiments - what are the
+parameters of the priors? How big is the dataset?}
+
 The distribution of the power posterior of the following Bayesian model with
 dataset $x = (x_1, \ldots, x_n)$ 
 \begin{subequations}
@@ -395,8 +400,8 @@ posterior chains are well converged.}
   \label{fig:swim_poisson_ga} 
 \end{figure}
 \end{comment}
+\jsh{Which prior?}
 
-\clearpage
 
 \subsection{Skew-normal distribution}
 To gain more insight into prior impacts, we analysed the frontiers data set
