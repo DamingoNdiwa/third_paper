@@ -18,7 +18,6 @@
 \usepackage{accents}
 \usepackage{appendix} % For enhanced appendix formatting
 \usepackage{todonotes}
-\DeclareUnicodeCharacter{03A7}{}
 
 \onehalfspacing
 
@@ -30,13 +29,14 @@ distances and the power posterior}
 \date{\today}
 
 \usepackage{glossaries}
-\DeclareUnicodeCharacter{03A7}{}
 
 \newacronym{wim}{WIM}{Wasserstein Impact Measure}  
 \newacronym{nuts}{NUTS}{No-U-Turn sampler}  
 \newacronym{swim}{sWIM}{prior scaled Wasserstein Impact Measure}  
 \newacronym{bf}{BF}{Bayes factor}
 \newacronym{mcmc}{MCMC}{Markov Chain Monte Carlo}
+\newacronym{ott}{OTT}{Optimal Transport Tools}
+\newacronym{tfp}{TFP}{Tensorflow Probability}
 
 
 \begin{document}
@@ -127,6 +127,8 @@ sample size, that is, at which adding more data into the problem (implicitly
 via the parameter $\gamma$) does not lead to an increase in the distance
 between the power posterior and the prior.
 
+\jsh{Finish this final paragraph}
+
 In addition to looking at an prior to posterior transition for a single fixed
 prior, we also look at the evolution of the Wasserstein distance under
 different prior assumptions.
@@ -174,8 +176,46 @@ to the ill-posed nature of the squared Euclidean distance
 \jsh{Write definition of subsampling}
 
 \subsection{Numerical methods}
-\jsh{Brief summary of numerical methods and how they are implemented, no major
-details}
+We give a brief overview of the numerical methods used to generate the results.
+For full details see the references provided below.
+
+Samples from the power posteriors and priors are generated using \gls{mcmc},
+specifically the \gls{nuts} \citep{hoffman2014}. We use the version implemented
+within \gls{tfp} \citep{dillonTensorFlowDistributions2017} running on the JAX
+backend \citep{jax2018github}.
+
+We remark that exploring power posteriors within \gls{tfp} is straightforward
+and only requires the programmatic definition of the log power-posterior. This
+involves scaling the provided log-likelihood evaluation by $\gamma$ and then
+adding the log-prior terms. This can be achieved in a few lines of code and the
+resulting function passed to any of the \gls{mcmc} methods built-in to
+\gls{tfp}.
+
+The skew-normal distribution is not implemented in \gls{tfp}, so we wrote a
+custom distribution using Distrax \citep{deepmind2020jax} following the
+numerical methodology described in \citep{ghorbanzadeh_method_2014}. 
+
+To calculate Wasserstein-1 distance for the one-dimensional problems we use the
+Vallender formula \cite{vallender_calculation_1974} which relates the
+1-Wasserstein distance between two probability measures $\mu_1$ and $\mu_2$ on
+$\mathbb{R}$ with cumulative distribution functions $F_1(x)$ and $F_2(x)$,
+respectively
+\begin{equation}
+W_1(\mu_1, \mu_2) = \int_{\mathbb{R}} | F_1(x) - F_2(x) | \; \mathrm{d}x.
+\end{equation}
+We approximate the Vallender formula using the dedicated function available in
+SciPy \citep{2020SciPy-NMeth}. 
+
+For the multi-dimensional case we cannot use to the Vallender formula to
+compute the Wasserstein distance. Instead we use recent advances in
+computational optimal transport to estimate the Wasserstein distance.
+Specifically, we use entropic regularized optimal transport proposed in
+\citep{NIPS2013_af21d0c9} and its implementation within the \gls{ott} library
+\citep{cuturi2022optimal}. 
+
+
+All code and data used to produce the results in this paper will be available
+as supplementary material upon journal submission.
 
 \section{Results}
 
@@ -302,14 +342,6 @@ where $s^2 = (\sum_{i} \left( x_i - \mu \right)^2)/n$ is the uncorrected sample
 variance. Again, setting $\gamma = 0$ recovers the prior, and setting $\gamma =
 1$ recovers the usual conjugate result for the standard Bayesian posterior.
 
-To the best of our knowledge there is no easily computable expression for the
-Wasserstein metric between inverse gamma distributions for any value of $p$.
-We instead use the Vallender formula which relates the 1-Wasserstein distance
-between two probability measures $\mu_1$ and $\mu_2$ on $\mathbb{R}$ with
-cumulative distribution functions $F_1(x)$ and $F_2(x)$, respectively
-\begin{equation}
-W_1(\mu_1, \mu_2) = \int_{\mathbb{R}} | F_1(x) - F_2(x) | \; \mathrm{d}x.
-\end{equation}
 
 \FloatBarrier
 \begin{figure}[ht!]
