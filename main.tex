@@ -17,11 +17,16 @@
 \usepackage{dsfont}
 \usepackage{accents}
 \usepackage{appendix} % For enhanced appendix formatting
-\usepackage{todonotes}
+\usepackage[disable]{todonotes}%[disable]
+\usepackage{amsthm,empheq}
+\usepackage{booktabs} 
+
 
 \onehalfspacing
+\newtheorem{theorem}{Theorem}
 
 \newcommand{\jsh}[1]{\todo[inline,color=green!20, caption={2do}]{\textbf{Jack:}\\#1}}
+\crefname{section}{Appendix}{Appendices} % Custom naming for appendices
 
 \title{Insights into the prior to posterior transition through Wasserstein
 distances and the power posterior}
@@ -47,10 +52,7 @@ distances and the power posterior}
 
 \begin{abstract}
 
-To ensure parameter estimates are robust to the specification of the prior it
-is essential to check if different priors produce varying results. The recently
-introduced Wasserstein Impact Measure measures the distance between two posteriors
-induced
+To ensure the robustness of parameter estimates against prior specifications, it is essential to assess whether varying priors yield differing posterior results. Assessing the impact of priors is necessary to determine if they lead to contradictory conclusions. For instance, the recently proposed Wasserstein Impact Measure quantifies the distance between two posterior distributions induced by different priors given a fixed likelihood and dataset. However, this measure does not account for potential model misspecification. One approach to address model misspecification is the use of power posteriors. In this study, we leverage Wasserstein distance and power posteriors to gain insights into the transitions from prior to posterior distributions. Also, we demonstrate that power posteriors are equivalent to subsampling and provide derivations for power posteriors in conjugate cases.
 
 \end{abstract}
 
@@ -64,36 +66,13 @@ data (via likelihood). Explain what the WIM doesn't do.}
 \jsh{JSH: TODO: Discuss new idea. Examine the continuous transition between prior and
 posterior via the likelihood.}
 
-Several measures of prior impact assessment have been developed. These measures
-of prior impact are usually based on divergences such as the Kullback–Leibler
-divergence or distances such as the Wasserstein distance. However, these
-distances are not directly interpretable and cannot tell us the weight of the
-impact of a prior distribution. We provide the weight of impact for prior
-distributions relative to standard normal distributions.
+Priors are a crucial element of Bayesian analysis, and the choices made can significantly impact parameter inference. Various methods have been developed to assess the impact of priors, one of which is the \gls{wim} \citep{ghaderinezhadWassersteinImpactMeasure2022}. The \gls{wim} is the Wasserstein distance between two posteriors resulting from two different priors for a given data set. The \gls{wim} is a relative measure of impact between standard posteriors. However, the methods of prior impact assessment, including the \gls{wim}, do not tell us how the priors transition to the posterior.
 
-Power posteriors have been used in many applications. One of such is the
-calculation of the marginal likelihood \citep{friel2008marginal}. They are used
-to calculate the objective \gls{bf} and are referred to there as fractional
-posteriors \citep{ohaganPropertiesIntrinsicFractional1997}. They have been
-applied to sample across multimodal distributions. We use the power posteriors
-to understand how prior impacts posterior inference. For conjugate cases, we
-derive and make use of analytic solutions. However, we use \gls{mcmc} to extend
-our approach for models with no closed-form solution. In addition, we compute
-the \gls{wim} of \cite{ghaderinezhadWassersteinImpactMeasure2022}, which
-requires the calculation of Wasserstein distances. We use graphs to illustrate
-the impacts of priors and how the priors transition to the posteriors.
+Moreover, the \gls{wim} has limitations in its interpretability; for instance, a value of 2.0 does not indicate whether one prior has a higher or lower impact than the other. To illustrate, consider a scenario where the \gls{wim} value is 2.0 for two different priors. This value alone does not provide information on which prior has a higher impact, making it difficult to interpret the results.
 
+This study employs power posteriors and Wasserstein distances to gain insights into prior to posterior transitions. Power posteriors have been used in many applications, such as calculating the marginal  likelihood \citep{friel2008marginal} and calculating the objective \gls{bf} \citep{ohaganPropertiesIntrinsicFractional1997}, where they are referred to as fractional posteriors. They have also been applied to sample across multimodal distributions and are used to set up power priors \citep{Dimitris_2015, Joseph_2000} for robust Bayesian inference  \citep{Jeffrey_2019}. For conjugate cases, we derive and make use of analytic power posteriors. We use graphs to illustrate how the priors transition to the posteriors.
 \subsection{Contribution}
-
-The main contributions of this paper are as follows. Using the concept of the
-power posterior we construct a continuous family of posteriors between prior
-and posterior by raising the usual likelihood to a power posterior constant
-$\gamma \in [0, 1]$. To give a visual intuition of this transition, in
-\cref{fig:skew_normal_powpos} we show posterior density plots of the power
-posteriors living between a uniform prior the standard posterior for a
-parameter describing the skewness of a dataset.
-
-\jsh{JSH: Expand on last comment about plot}
+The main contributions of this paper are as follows. Using the concept of the power posterior we construct a continuous family of posteriors between prior and posterior by raising the usual likelihood to a power posterior constant $\gamma \in [0, 1]$. To give a visual intuition of this transition, in \cref{fig:skew_normal_powpos} we show posterior density plots of the power posteriors living between a uniform prior and the standard posterior for a parameter describing the skewness of a dataset. When $\gamma = 0.00$, the prior distribution is uniform, spanning a broad range of values from -50 to 50. As $\gamma$ increases from 0.00 to 0.20, the prior gradually transitions into a right-skewed power posterior, constrained to positive values from 0 to 50. For $\gamma$ values greater than or equal to 0.25, the peak shifts more to the right and the power posterior has a narrower range of values from 0.0 to 25. 
 
 \begin{figure}
 \begin{center}
@@ -104,77 +83,84 @@ parameter describing the skewness of a dataset.
 	($0 < \gamma \leq 0.5$). Posterior based on the frontier data set for the
 	skew-normal distribution.}\label{fig:skew_normal_powpos}
 \end{figure}
-
 From the definition of the power posterior we derive extensions of three
 standard conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
 Poisson-Gamma cases. These conjugate results show that for an observed data set
 of size $n$ the product $\gamma n$ as the effective sample size of the observed
 data, that is, $\gamma$ can be used to reduce the sample size of the data from
-$n$ to $n\gamma$. An alternative intepretation, which can be seen by writing
-the log-likelihood, is that $\gamma$ controls the relative weight of the
-log-likelihood (and consequently the data) with respect to the log-prior.
+$n$ to $n\gamma$. 
 
 With the definition of the power posterior in hand we then observe the
 evolution of the Wasserstein distance between power posterior measures
-$\mu_{\gamma}$ and the fixed prior measure $\mu_{0}$. These plots typically
-show a sudden change in the Wasserstein distance as $\gamma$ is increased just
-beyond zero (the prior is moved a large distance by a small effective sample
-size of the data). As $\gamma$ is increased at some point the distance
-`saturates' and increasing $\gamma$ further (i.e. increasing the effective
-sample size) does not lead to the posterior moving significantly further away
-from the prior. This saturation region gives us an indication of a saturation
-sample size, that is, at which adding more data into the problem (implicitly
+$\mu_{\gamma}$ and the fixed prior measure $\mu_{0}$. These plots typically show a sudden change in the Wasserstein distance as $\gamma$ is increased just beyond zero (the prior is moved a large distance by a small effective sample size of the data). As $\gamma$ is increased at some point the distance `saturates' and increasing $\gamma$ further (i.e. increasing the effective sample size) does not lead to the posterior moving significantly further away from the prior. This saturation region gives us an indication of a saturation sample size, that is, at which adding more data into the problem (implicitly
 via the parameter $\gamma$) does not lead to an increase in the distance
-between the power posterior and the prior.
+between the power posterior and the prior. 
 
-\jsh{Finish this final paragraph}
+We demonstrate through simulations that subsampling is equivalent to power posteriors, where the power $\gamma$ serves as a weight for the data, resulting in a reduced sample size.
 
-In addition to looking at an prior to posterior transition for a single fixed
-prior, we also look at the evolution of the Wasserstein distance under
-different prior assumptions.
+In addition to looking at an prior to posterior transition for a single fixed prior, we also look at the evolution of the Wasserstein distance under different prior assumptions with the findings illustrated in graphs. 
 
 \section{Methodology}
 
+This section covers the concepts and methodologies used in this study, such as power posteriors, Wasserstein distance calculations, subsampling, and numerical methods.
+	
 \subsection{Power posterior}
 We briefly recall the mathematical concept of the power posterior (sometimes
-also called the fractional posterior) which is central to this paper. Let $y$
-be some observed data and $p(y\, | \, \theta)$ be the likelihood function of a
+also called the fractional posterior) which is central to this paper. Let $x$
+be some observed data and $p(x\, | \, \theta)$ be the likelihood function of a
 model that depends on a set of parameters $\theta$ with associated prior
 $p(\theta)$. Moreover, let $\gamma$ be an additional \emph{power posterior
 constant} in the interval $[0, 1]$. Then the power posterior
 \citep{friel2008marginal} can be defined as
 \begin{equation}
 \label{eq:pow_pos}
-p(\theta \, | \, y,\gamma) := \frac{p(y \, | \, \theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1],
+p(\theta \, | \, x,\gamma) := \frac{p(x \, | \, \theta)^\gamma p(\theta)}{z}, \quad \gamma \in [0, 1],
 \end{equation}
-where $z := p(y)$ is a normalising constant called the marginal likelihood. It
+where $z := p(x)$ is a normalising constant called the marginal likelihood. It
 is straightforward to see that for $\gamma = 0$ we recover the usual Bayesian
 prior $p(\theta)$ and for $\gamma = 1$ we recover the standard Bayesian
 posterior $p(\theta \, | y)$. We emphasise that for intermediate values $\gamma
 \in (0, 1)$ the resulting set of power posteriors forms a continuous
-transition between the standard prior and posterior distribution.
+transition between the standard prior and posterior distribution. The likelihood  $p(x|\theta)$ reflects how likely it is for a parameter to generate the data. We can see from $\gamma \log p(x|\theta)$ that $\gamma$ 
+controls the relative weight of the log-likelihood (and consequently the data) with respect to the log-prior.
 
 \subsection{Wasserstein distance}
 The definition of the $p$-Wasserstein distance ($W_p$) between two probability
-measures $\mu, \nu$ defined on the spaces $\mathcal{X}$ and $\mathcal{Y}$ is 
+measures $\mu, \nu$ defined on the space $\mathcal{X}$  is 
 \begin{equation}
-W_p(\mu, \nu) = \inf_{\pi \in U(\mu, \nu)} \left(\int_{\mathcal{X} \times \mathcal{Y}}||x-y||^pd\pi(x, y) \right)^{1/p}, \quad p\geq 1,
-\label{wasser:ana}
+W_p(\mu, \nu) = \inf_{\pi \in U(\mu, \nu)} \left(\int_{\mathcal{X} \times \mathcal{X}}||x-y||^pd\pi(x, y) \right)^{1/p}, \quad p\geq 1,
+\label{wasser:ana1}
 \end{equation}
 where $U(\mu, \nu)$ is the set of joint probability measures on
-$\mathcal{X}\times \mathcal{Y}$ \citep{villaniOptimalTransportOld2009}. The
-Wasserstein distance has a natural intepreration as the minimum amount of work
-required to reconfigure the mass of one distributoin into another. Calculating
+$\mathcal{X}\times \mathcal{X}$ \citep{villaniOptimalTransportOld2009}, $x$ and $y$ are points in the space $X$. The
+Wasserstein distance has a natural interpretation as the minimum amount of work
+required to reconfigure the mass of one distribution into another. Calculating
 the Wasserstein distance becomes non-trivial in moderate to high dimensions due
 to the ill-posed nature of the squared Euclidean distance
 \citep{cuturiMongeBregmanOccam2023}. 
 
-\subsection{Posterior measures}
-\jsh{Define all of the varios measures}
-
 \subsection{Subsampling}
-\jsh{Write definition of subsampling}
+Subsampling refers to the method of drawing a random sample from a dataset to analyse it as a representative of the complete dataset \citep{Drineas_2006, yaoReviewOptimalSubsampling2021, Ma_2014}. Consider $\{x_i\}_{i=1}^n$ are $n$ independent and identically distributed observations. We can draw a subsample of size $m$ from the entire sample of size $n$ with sampling probabilities $\{\pi_i\}_{i=1}^n$ on each observation. The observations have equal sampling probabilities. The motivation for subsampling is to avoid the computational expense of analysing the entire data set. 
 
+Subsampling is similar to using power posteriors. When working with large datasets, using power posteriors with a power value close to 1 can be a practical strategy to manage computational complexity and reduce the impact of model misspecification. To demonstrate this, we calculated the expectation of the Wasserstein distance between the priors and the standard posterior across multiple subsamples of size $m= \gamma n$, where $m$ is the subsample size, $n$ is the size of the entire dataset, and $\gamma$ varies for each subsample. We also calculated the Wasserstein distances between the priors and their corresponding power posteriors. We found that the expectation of the Wasserstein distance between the prior and the standard posterior with respect to subsampling converges to the same value as the Wasserstein distance between the priors and the power posteriors.
+
+\subsection{Posterior measures}
+This section introduces several measures used in the results section:
+\begin{itemize}
+	\item $\mu_0$: prior distribution.
+	\item $\mu_{\gamma}$: power posterior where $\gamma \in [0, 1]$.
+	\item $W_2^2(\mu_{\gamma}, \mu_0)$: The squared 2-Wasserstein distance between the power posterior and the prior distribution.
+\end{itemize}
+
+ The expectation with respect to subsamples between a standard posterior $\mu$ and the prior is defined as 
+ 
+ \begin{equation}
+ E [W_2^2(\mu, \mu_0)] = \frac{1}{S}\sum_{i=1}^{S} W_2^2(\mu, \mu_0),
+ \label{eq:wasser_ex}
+ \end{equation}
+ 
+where $S$ is the number of subsamples, each of size  $m$ drawn from the full data set of size $n$.
+ 
 \subsection{Numerical methods}
 We give a brief overview of the numerical methods used to generate the results.
 For full details see the references provided below.
@@ -217,8 +203,30 @@ Specifically, we use entropic regularized optimal transport proposed in
 All code and data used to produce the results in this paper will be available
 as supplementary material upon journal submission.
 
-\section{Results}
+\section{Overview of methodology}
+\subsection{Evolution of the Wasserstein distances}
+\begin{enumerate}
+	\item Generate data from the models.
+	\item Set up different priors and a likelihood function. Obtain the power posteriors. For conjugate cases, the power posteriors are available in closed form. 
+	\item Compute the Wasserstein distances between the priors and their corresponding power posteriors. The Wasserstein distance is available in closed form for a normal prior and a normal likelihood function. 
+	\item Make plots of the Wasserstein distances against $gamma$ for the different priors.
+\end{enumerate}
 
+\subsection{subsampling}
+\begin{enumerate}
+	\item Set up a sequence of $\gamma$ values from 0 to 1. For each value of $\gamma$, compute the Wasserstein distances between the priors and the power posteriors using the entire dataset. 
+	\item For each value of $\gamma$, draw $S$ subsamples, each of size $m$ from the entire dataset, where \[m=\gamma n,\] with $\gamma \in [0, 1]$ representing the power, and $n$ is the sample size of the entire data set.
+\begin{itemize}
+	\item For each subsample, compute the Wasserstein distances between the priors and the respective standard posteriors.
+	\item Compute the expectation of the Wasserstein distances across the $S$ subsamples.
+	\item  Make plots of the Wasserstein distances and the expectation against the values of $\gamma$.
+\end{itemize}
+\end{enumerate}
+
+
+
+\section{Results}
+This section presents the results of the transition of various priors to their corresponding posteriors. These results are based on experiments with power posteriors for conjugate cases and a skew-normal distribution. Also, we illustrate that subsampling yields results equivalent to those obtained through power posteriors.
 \subsection{Normal-normal conjugate case with unknown mean}
 Following standard arguments, it is possible to show that the distribution of
 the power posterior for the following Bayesian model with dataset $x = (x_1,
@@ -229,9 +237,9 @@ x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \mathcal{N}(m, \sigma^2), \\
 m &\sim \mathcal{N}(m_0, \sigma_0^2),
 \end{align}
 \end{subequations}
-is normally distributed
+is normally distributed (see \cref{appen}, \cref{proof:pow_norm} for proof)
 \begin{equation*}
-m \;|\; x \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right),
+m \;|\; \bar{x}, \gamma \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right),
 \end{equation*}
 where $\bar{x} = (\sum x_i)/ n$ is the sample mean. We remark that, as
 expected, the prior is recovered when $\gamma = 0$ and the classic
@@ -258,33 +266,41 @@ $\mu_\gamma$ is
 \begin{equation*}
 W_2(\mu_0, \mu_\gamma)^2 = \sigma_{0}^{2} + \frac{\sigma^{2} \sigma_{0}^{2}}{p} + \frac{\left(\gamma m_{0} n \sigma_{0}^{2} - \gamma n \sigma_{0}^{2} \bar{x}\right)^{2}}{p^{2}} - \frac{2 \sigma \sigma_{0}^{2}}{\sqrt{p}}
 \end{equation*}
-with $p = \gamma n \sigma_{0}^{2} + \sigma^{2}$ and the derivative of the
-squared Wasserstein distance with respect to $\gamma$ given by
-\tiny
-\begin{equation*}
-\frac{d}{d\gamma} [W_2(\mu_0, \mu_\gamma)^2] =
-p^{-\frac{15}{2}}n \sigma_{0}^{2} \left(- p^{\frac{11}{2}} \sigma^{2} \sigma_{0}^{2} - 2 p^{\frac{9}{2}} \left(- \gamma n \sigma_{0}^{2} \bar{x} + m_{0} p - m_{0} \sigma^{2}\right) \left(- \gamma n \sigma_{0}^{2} \bar{x} - m_{0} \sigma^{2} + p \bar{x}\right) + p^{6} \sigma \sigma_{0}^{2}\right).
-\end{equation*}
-\normalsize
-\jsh{Consider moving this to an appendix}
-Letting $\gamma = 0$ it can be verified that $W_2(\mu_0, \mu_0)^2 = 0$, as
-expected, and also that $\frac{d}{d\gamma}[W_2(\mu_0, \mu_0)^2] = 0$. 
+with $p = \gamma n \sigma_{0}^{2} + \sigma^{2}$.
+Letting $\gamma = 0$ it can be verified that $W_2(\mu_0, \mu_0)^2 = 0$. 
 
 In the first experiment we generate a (small) dataset of size $n = 10$ from a
 normal distribution with zero mean and unit variance. We propose three prior
-choices by adjusting the prior parameters $m_0$ and $\sigma_0^2$:
+choices (\cref{priors_inorm_norm}) by adjusting the prior parameters $m_0$ and $\sigma_0^2$:
 \begin{enumerate}
-\item \emph{Non-informative prior}. $m_0 = 0$ and $\sigma_0^2 = 100$. With
+\item \emph{Non-informative prior}.  With
 this relatively flat prior we expect the posterior to be `data prominent'
 and highly sensitive to the inclusion of information via the likelihood,
 here controlled by the parameter $\gamma$.
-\item \emph{Informative `correct' prior}. $m_0 = 0$ and $\sigma_0^2 = 2$.
+\item \emph{Informative `correct' prior}.
 This prior expresses definite information about the parameter that
 coincidentally coincides with the true parameter. 
-\item \emph{Informative `incorrect' prior}. $m_0 = -5$ and $\sigma_0^2 = 2$.
+\item \emph{Informative `incorrect' prior}.
 This prior expresses definite information about the parameter that
 does not coincide with the true parameter value. 
 \end{enumerate}
+
+\begin{table}[h!]
+	\caption{Priors and their corresponding distributions the Normal likelihood normal prior case.}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{cc}
+		\toprule
+		Priors   & Distribution \\
+		\midrule
+		Non informative  &  $\mathcal{N}(0.0, 100) $   \\
+				Informative    `correct'  & $\mathcal{N}(0.0, 2)$\\
+		Informative `incorrect'  & $\mathcal{N}(-5.0, 2)$    \\
+		\bottomrule
+	\end{tabular}
+	\label{priors_inorm_norm}
+\end{table}
+
 In \cref{fig:normal_normal_wasserstein_distance_different_priors} we calculate
 the squared 2-Wasserstein distance between the posterior measure $\mu_\gamma$
 for varying values of $\gamma$ and under the three prior assumptions just
@@ -308,19 +324,21 @@ power posterior parameter $\gamma \in [0, \frac{1}{2}]$ under the three
 different prior assumptions described in the text.}\label{fig:normal_normal_wasserstein_distance_different_priors}
 \end{figure}
 
-Given the intepretation of the parameter $\gamma n$ as an effective sample size
+Given the interpretation of the parameter $\gamma n$ as an effective sample size
 in the normal-normal setting, we briefly contrast the power posterior approach
 with an approach based on using the standard posterior and varying the size $n$
 of the dataset.
 
-\jsh{JSH: To complete description of subsampling}
+To demonstrate the relationship between subsample size and the power posterior, we begin by generating 1000 samples from a standard normal distribution. We then draw 500 subsamples, each of size $m = \gamma n$ where $n = 1000$ and $\gamma$ varies from 0 to 1. For each subsample, we compute the squared 2-Wasserstein distance between the prior and the standard posterior, as well as the mean of these Wasserstein distances, using \cref{eq:wasser_ex}. The results, along with the corresponding $\pm 2\sigma$  interval around the mean, are presented in \cref{fig:normal_normal_compare_with_subsampling}. Additionally, we calculate the squared 2-Wasserstein distance between the prior and the power posterior for various values of $\gamma$. 
+
+In addition, \cref{fig:normal_normal_compare_with_subsampling} illustrates the convergence of the Wasserstein distance 1) between the prior ($\gamma=0$) and the power posteriors $\gamma \in (>0, 1)$ and  2) between the prior and the standard posteriors ($\gamma=1$)  as $\gamma$ increases. As $\gamma$ approaches 1, this convergence exemplifies the increasing similarity between the power and standard posteriors with subsampling. Also, the uncertainty in the standard posterior estimates decreases as $\gamma$ approaches 1, or in other words, as the subsample size increases. For higher values of $\gamma$, the power posteriors and the standard posteriors with subsampling will lead to similar results. 
 
 \FloatBarrier
-\begin{figure}[ht!]
+\begin{figure}[h!]
 \begin{center}
 \includegraphics{imgs/gauss_knownsigma_subsample.pdf}
 \end{center}
-\caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling. Both have the same mode and mean.}\label{fig:normal_normal_compare_with_subsampling}
+\caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling.}\label{fig:normal_normal_compare_with_subsampling}
 \end{figure}
 
 \subsection{Inverse-Gamma conjugate case with unknown variance}
@@ -334,38 +352,47 @@ x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \mathcal{N}(m, \sigma^2), \\
 \end{align}
 \end{subequations}
 with $\alpha, \beta \in \mathbb{R}_{>0}$, is distributed according to an
-inverse gamma distribution
+inverse gamma distribution (see \cref{appen}, \cref{proof:pow_ing} for proof)
 \begin{equation*}
-\sigma^2 \; | \; x_1, \ldots, x_n \sim \text{Inv-Gamma}\left( \alpha + \frac{\gamma n}{2}, \beta + \frac{\gamma n}{2} s^2 \right). 
+\sigma^2 \; | \; s^2, \gamma \sim \text{Inv-Gamma}\left( \alpha + \frac{\gamma n}{2}, \beta + \frac{\gamma n}{2} s^2 \right). 
 \end{equation*}
 where $s^2 = (\sum_{i} \left( x_i - \mu \right)^2)/n$ is the uncorrected sample
 variance. Again, setting $\gamma = 0$ recovers the prior, and setting $\gamma =
 1$ recovers the usual conjugate result for the standard Bayesian posterior.
 
+We explore how the Wasserstein distance between the prior and power posteriors changes. Firstly, we generate data of size 100 from a standard normal distribution. Then, an inverse gamma prior with different values of the shape and scale parameters is used, giving three sets of priors (\cref{priors_invg}): informative correct, non-informative prior, and informative incorrect prior.
+
+\begin{table}[h!]
+	\caption{Priors and their corresponding distributions.}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{cc}
+	\toprule
+		Priors      & Distribution  \\
+		\midrule
+		Non informative    &  $\text{Inv-Gamma}(1.0, 1.0)$  \\
+		Informative `incorrect'   & $\text{Inv-Gamma}(3.0, 0.5)$    \\
+		Informative    `correct'  & $\text{Inv-Gamma}(3.0, \sqrt{2})$\\
+		\bottomrule
+	\end{tabular}
+	\label{priors_invg}
+\end{table}
+
+The priors are used to fit three different models to the data with a normal likelihood. For each prior, the Wasserstein distance between the prior and the power posteriors is calculated. When using a non-informative prior, this distance increases with the value of $\gamma$, eventually levels off  at a $\gamma$ value between 0.1 and 0.2 (\cref{fig:ing_conju}). In contrast, the distance decreases initially for informative priors but eventually stabilizes. Nonetheless, as $\gamma$ increases, all priors converge to the same distance due to incorporating more data.
 
 \FloatBarrier
-\begin{figure}[ht!]
-    \centering
-    % First plot
-    \subfigure[Data distribution compared to various power posteriors]{
-        \includegraphics[width=0.45\textwidth]{imgs/data_posteriors_ivg.pdf} % Replace with your file name
-        \label{fig:invg_dist}
-    }
-    \hfill % This ensures no extra space between the subfigures
-    % Second plot
-    \subfigure[Wasserstein distance between the standard prior and power posteriors for different distributions]{
-        \includegraphics[width=0.45\textwidth]{imgs/wasserstein_distance_ivg.pdf} % Replace with your file name
-        \label{fig:invg_wasser}
-    }
-
-    \caption{Comparison of power posteriors to the data model (a) and standard prior (b) for the inverse gamma conjugate case.}
+\begin{figure}
+\begin{center}
+        \includegraphics{imgs/inv_gamma_wasserstein_distance.pdf}     
+\end{center}
+        \caption{Inverse-Gamma conjugate case with unknown variance; plot showing squared
+2-Wasserstein metric between power posterior and prior against the
+power posterior parameter $\gamma \in [0, \frac{1}{2}]$ under the three
+different prior assumptions described in  \cref{priors_invg}.}
     \label{fig:ing_conju}
 \end{figure}
-\jsh{I cannot distinguish between the two blues}
 
 \subsection{Poisson-Gamma conjugate case with unknown rate}
-\jsh{There is no description or analysis of these experiments - what are the
-parameters of the priors? How big is the dataset?}
 
 The distribution of the power posterior of the following Bayesian model with
 dataset $x = (x_1, \ldots, x_n)$ 
@@ -376,362 +403,233 @@ x_1, \ldots, x_n &\overset{\mathrm{iid}}{\sim} \text{Poisson}(\lambda), \\
 \end{align}
 \end{subequations}
 where $\lambda \in \mathbb{R}_{>0}$ is the unknown rate parameter, and $\alpha,
-\beta \in \mathbb{R}_{>0}$ are prior parameters is given by
+\beta \in \mathbb{R}_{>0}$ are prior parameters is given by (see \cref{appen}, \cref{proof:poisson_gamma} for proof)
+
 \begin{equation}
-\lambda \; | \; x \sim \text{Gamma} \left( \alpha + \gamma n \bar{x}, \beta + \gamma n \right)
+\lambda \; | \; \bar{x} \sim \text{Gamma} \left( \alpha + \gamma n \bar{x}, \beta + \gamma n \right)
 \end{equation}
 
+We investigate the impact of three different sets of priors on the posterior distribution. We generate 100 observations from a Poisson distribution with a rate parameter 1.0. We employ three sets of priors \cref{priors_gammaPois} with a Poisson likelihood for the analysis. 
+\begin{table}[h!]
+	\caption{Priors and their corresponding distributions.}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{cc}
+		\toprule
+		Priors                   & Distribution\\
+		\midrule
+		Non informative                    &  $\text{Gamma}(1.0, 1.0)$\\
+		Informative `incorrect'         & $\text{Gamma}(10.0, 1.0)$\\
+		Informative    `correct'               & $\text{Gamma}(1.0, 0.2)$\\
+		\bottomrule
+	\end{tabular}
+	\label{priors_gammaPois}
+\end{table}
+
+
+We compute the squared Wasserstein distance between each prior and its corresponding power posterior. Our analysis indicates that as $\gamma$ increases, the distance also increases for non-informative priors, while it decreases with increasing $\gamma$ for informative but incorrect priors \cref{fig:poisson_ga_conju}. Eventually, the distances stabilize across all priors. Informative priors converge to the same values, and an elbow point is observed for all priors, beyond which the distance levels off. For the Inverse Gamma prior, this stabilization occurs just before reaching a value of 0.2.
+
 
 
 \begin{figure}[htbp]
-    \centering
-    % First plot
-    \subfigure[Standard prior compared to various power posteriors]{
-        \includegraphics[width=0.45\textwidth]{imgs/data_posteriors_gamma.pdf} % Replace with your file name
-        \label{fig:pois_gamma}
-    }
-    \hfill % This ensures no extra space between the subfigures
-    \subfigure[Wasserstein distance between the power posteriors and standard prior up to $\gamma=0.5$]
-{
-        \includegraphics[width=0.45\textwidth]{imgs/wasserstein_distance_gamma.pdf} % Replace with your file name
+    \begin{center}
+   \includegraphics{imgs/poisson_gammawasserstein_distance.pdf}
+       \end{center}
         \label{fig:pois_gama_was}
-    }
-
-    \caption{Poisson-Gamma conjugate case with unknown rate}
+    \caption{Poisson-Gamma conjugate case with unknown rate. Plot showing squared
+    	2-Wasserstein metric between power posterior and prior against the
+    	power posterior parameter $\gamma \in [0, \frac{1}{2}]$ under the three
+    	different prior assumptions described in  \cref{priors_gammaPois}.}
     \label{fig:poisson_ga_conju}
 \end{figure}
-\jsh{Plots are too small}
 
+
+To further study the relation between sampling and $\gamma$ , we draw 50 subsamples, each of size $m$ where $m =\gamma n$ with $n=100$. We then compute the squared Wasserstein distance between the prior and each subsample for different values of $\gamma$ and then the mean of the Wasserstein distance. Additionally, we calculate the distance between the priors and the power posteriors, and the results are presented in \cref{fig:poisson_ga_conju}. The squared Wasserstein distance converges more rapidly compared to the Normal normal case. The Wasserstein distance converges when $\gamma$ is below 0.2. Similar to the normal normal case, the uncertainty is greatest at lower values of $\gamma$, especially when the subsample size is smaller \cref{fig:poisson_gamma_sub}. 
+
+\FloatBarrier
 \begin{figure}
 \begin{center}
-\includegraphics{imgs/poisson_gamma_subsample.pdf}
+\includegraphics{imgs/poisson_gamma_subsample3.pdf}
 \end{center}
-\caption{Distribution of the Wasserstein distance between the prior and the
-	standard posterior ($\gamma=1.0$) with subsampling of the data and
-	distribution of the Wasserstein distance between the power posteriors
-	and priors. Both distributions very close with a mean of 0.65. Poisson
-	Gamma case conjugate case.}\label{fig:poisson_gamma_sub}
+\caption{Comparison of the distances for power posteriors and standard posteriors with subsampling. Poisson-Gamma conjugate case with unknown rate.}\label{fig:poisson_gamma_sub}
 \end{figure}
-\jsh{I do not understand how the Wasserstein distance between the power
-posterior and prior can be a random variable (and hence be plotted as a
-distribution). The calculation is 'deterministic' if the prior and power
-posterior chains are well converged.}
-\jsh{I don't see the necessity of 'and prior' in the legend.}
-\jsh{Text of x and y labels is crazy large, also on other plots}
 
-\begin{comment}
-\begin{figure}[htbp]
-  \centering
-  \includegraphics{imgs/swim_poisson_gamma_con.pdf} 
-  \caption{Poisson-Gamma conjugate case with unknown rate; Plot showing the
-	prior scale WIM between power posteriors with a non-informative prior
-	as baseline against the power posterior parameter $\gamma \in [0,
-	\frac{1}{2}]$. The sWIM value of 0.40 seems to be the elbow point where
-	the plots levels off, similar to the scree plot in Principal component
-	analysis.} 
-  \label{fig:swim_poisson_ga} 
-\end{figure}
-\end{comment}
-\jsh{Which prior?}
 
 
 \subsection{Skew-normal distribution}
-To gain more insight into prior impacts, we analysed the frontiers data set
-found in the R package sn \citep{azzalini2023}. This data set has been analysed
-by \cite{ghaderinezhadWassersteinImpactMeasure2022}. The data set is
-interesting because the maximum likelihood estimate is unrealistic. The data is
-generated by drawing 50 samples from a skew-normal distribution with a skewness
-parameter of 5. The density of a random variable $x$ that follows a skew normal
-distribution \citep{azzaliniClassD1985} is in \cref{skew_n}. Where $\phi$ is
-the standard normal probability density function, $\Phi$ is the cumulative
-distribution function of the standard normal distribution, $\mu$ is the
-location, $\sigma$ is the scale parameter and $\alpha$ is the skewness
-parameter.
+To gain more insight into prior-to-posterior transitions, we analyzed the frontiers data set found in the R package sn  \citep{azzalini2023}. \cite{ghaderinezhadWassersteinImpactMeasure2022} previously analyzed this data set. The data set is interesting because the maximum likelihood estimate of the coefficient of skewness lies on the boundary of the range [-0.995, 0.995] acceptable for the skew-normal family. The data was generated by drawing 50 samples from a skew-normal distribution with a skewness parameter 5.0. 
 \begin{equation}
-    f(x; \alpha) = \frac{2}{\sigma} \phi \left( \frac{x - \mu}{\sigma} \right) \Phi \left( \alpha \frac{(x - \mu)}{\sigma}  \right), \quad x \in \mathbb{R}
+    f(x; \alpha) = \frac{2}{\sigma} \phi \left( \frac{x - \mu}{\sigma} \right) \Phi \left( \alpha \frac{(x - \mu)}{\sigma} \right), \quad x \in \mathbb{R}
     \label{skew_n}
 \end{equation}
-\jsh{You should not use the reference functionality to introduce an equation
-directly next to its definition. Place definitions of parameters afterwards
-(see Christophe's paper)}
-
+The density of a random variable $x$ that follows a skew-normal distribution \citep{azzaliniClassD1985} is given by \cref{skew_n}.
+where $\phi$ is the standard normal probability density function, $\Phi$ is the cumulative distribution function of the standard normal distribution, $\mu$ is the location, $\sigma$ is the scale parameter`n and $\alpha$ is the skewness parameter.
 We fit the skew-normal distribution to the data with different sets of priors
 for the skewness parameter as in
 \cite{ghaderinezhadWassersteinImpactMeasure2022}. We compare the Wasserstein
-distance between various power posteriors and the prior. The priors are:
-\begin{itemize}
-\item Uniform prior
-\item Jeffreys prior
-\item Bayes-Laplace prior
-\item Beta total variation prior (BTV)
-\item Normal prior
-\end{itemize}
-\jsh{Seems unnecessary to use an explicit list incorporate into a sentence.}
-The squared Wasserstein distance between the priors and the power posteriors
-are in \cref{fig:skew_diff_priors}. The results suggest the difference between
-the Uniform and the Jeffrys priors is very small. However, the distance between
+distance between  power posteriors and the priors. The priors are
+Uniform prior, Jeffreys prior, Bayes-Laplace prior,  Beta total variation prior (BTV), normal prior. The squared Wasserstein distance between the priors and the power posteriors
+are in \cref{fig:skew_diff_priors}. The distance between
 the prior ($\gamma=0$) and the power posteriors increases with an increase in
-$\gamma$ but becomes stable as $\gamma$ approaches 1. These insights are more
-noticeable in the \gls{swim} compared to the squared Wasserstein distances.
-\jsh{This plot is huge, please make it smaller}.
+$\gamma$ but becomes stable as $\gamma$ approaches 1. However, unlike the conjugate cases, the distances do not converge to the same value as the plots are distinguishable.
+
+The priors employed in this section are the same as those in  \citep{ghaderinezhadWassersteinImpactMeasure2022}. What differentiates this study is that we do not compute the \gls{wim}; instead, we compute the Wasserstein distance between the priors and the power posteriors. The aim is to explore the evolution of the Wasserstein distance and how the priors transition to the posteriors for the skew-normal distribution. 
+
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/wasser_distskew.pdf}
-\end{center}
+\end{center}`
 \caption{Squared Wasserstein distance between the prior and various power
 posteriors for different values $\gamma \in [0, 0.5]$ on the frontiers
 data set.}\label{fig:skew_diff_priors}
 \end{figure}
-\jsh{Plot too big. No intepretation/discussion of result in figure caption.}
-\jsh{I would remove this stuff on sWIM entirely as discussed.}
-Hence, we also explore the concept of \gls{swim} introduced in ODE paper. We
-use Jeffrys prior and the Uniform prior as baseline priors for this. The
-results are in plots \cref{fig:swimdistskew}. We can observe that the
-\gls{swim} drops to zero as the prior transitions to the posterior. That is, as
-$\gamma$ increases from 0 to 0.5. When the Jeffreys prior is used as the
-baseline, the \gls{swim}  drops from 2.0 (\cref{fig:swimdistskew} A) to near
-zero. When the baseline is a uniform uniform prior, the \gls{swim} drops from
-1.0 to closer to 0.2. Hence, one can infer that the \gls{swim} is closer to
-zero when there is no impact compared to a baseline prior. Also, the \gls{swim}
-is closer to or greater than 1.0 when the prior impact is different from the
-baseline prior. When the baseline prior is noninformative, a \gls{swim} value
-close to zero indicates the prior in question is noninformative. This is seen
-in (\cref{fig:swimdistskew} A), where the dashed line seems to have a constant
-slope very close to zero for all values of $\gamma$. The inset shows the
-\gls{swim} values are very close to zero. When the baseline is a uniform
-distribution, the \gls{swim} are below one but have a minimum value of 0.2,
-which is further from zero compared to when the baseline is Jefferys prior. The
-fact that the \gls{swim} for the Uniform and the Jeffreys prior is close to
-zero, as shown by the dashed line in \cref{fig:swimdistskew}A, confirms that
-these two priors are closest. Another interesting visual is the density plot of
-the priors and the power posteriors. Plots of the two closest priors, the
-Uniform and Jeffreys priors, illustrate how the prior density transitions to
-the posterior. For the Uniform prior, the mode is not visible, but as $\gamma$
-starts increasing, a mode becomes visible, and the Uniform distribution starts
+
+Another way to visualise prior to posterior transitions  is through density plots  of the priors and the power posteriors. 
+\begin{comment}
+Plots of the uniform and Jeffreys priors illustrate how the prior density transitions to
+the posterior. 
+\end{comment}
+For the uniform prior \cref{fig:ref_skew_normal_powpos}, the mode is not visible, but as $\gamma$
+starts increasing, a mode becomes visible, and the uniform distribution starts
 transitioning into a skew distribution. On the other hand, the mode is visible
-for Jeffreys prior, but there is no skewness. As $\gamma$ increases, the mode
+for Jeffreys prior \cref{fig:skew_jeff_powpos}, but there is no skewness. As $\gamma$ increases, the mode
 becomes more visible, and skewness becomes visible. As the value of $\gamma$
 increases, the mode becomes more peaked, and the range of the skewness
-parameter decreases.
-
+parameter decreases. When $\gamma=0$, the prior is less informative with no skewness. A $\gamma$ increases, the prior develops a clear peak and becomes right-skewed. Skewness increases with increasing values of $\gamma$. This indicates the prior transitions from a less informative to an informative posterior ( skew normal posterior ) as $\gamma$ increases. Like in the uniform flat prior, as $\gamma$ increases, the prior peaks with less uncertainty and skewness to the right. The density plot of the priors ($\gamma=0$)  \cref{fig:skew_prior} and the standard posteriors ($\gamma=1$) \cref{fig:skew_pos} are shown for comparison with the power posteriors.
 
 \begin{figure}
-\begin{center}
-\includegraphics{imgs/swim_distskew.pdf}
+	\begin{center}
+\includegraphics{imgs/inv_gamma_wasserstein_distance.pdf}
 \end{center}
-\caption{Prior scale WIM for the skewness parameter of the skew normal
-	distribution with \textbf{(A)} Jeffrys prior as the baseline prior and
-	\textbf{(B)} the uniform prior as the baseline prior. For (A), 0.40 is
-	the sWIM value at which the elbow levels off similar to principal
-	component analysis.}\label{fig:swimdistskew}
+\caption{Marginal posteriors for the skewness parameter show the transition
+from a uniform prior ($\gamma=0$) to various power posteriors
+($0 < \gamma \leq  \frac{1}{2}$). Posterior based on the frontier data set for the
+skew-normal distribution.}\label{fig:ref_skew_normal_powpos}
 \end{figure}
-\jsh{I do not understand what is plotted here - the sWIM is defined between
-posterior measures, not posterior and prior measures}
-
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/Jeffreys.pdf}
 \end{center}
 \caption{Marginal posteriors for the skewness parameter show the transition
 	from Jeffreys prior ($\gamma=0$) to various power posteriors
-	($0<\gamma\leq1$).  Posterior based on the frontier data set for the
+	($0<\gamma\leq \frac{1}{2}$).  Posterior based on the frontier data set for the
 	skew-normal distribution. }\label{fig:skew_jeff_powpos}
 \end{figure}
-
-\clearpage
-\begin{comment}
-\subsection{Simple linear regression}
-
-\begin{subequations}
-\begin{align}
-        Y|\beta_0, \beta_1,  \epsilon  &\sim \mathcal{N} (\beta_0 + \beta_1 X_1,  \epsilon)\\
-    \beta_0  &\sim \mathcal{N}(0.0, 10.0)\\
-     \beta_1  &\sim \mathcal{N}(0.0, 10.0)\\
-     \epsilon & \sim \text{IG}(1.0, 0.5)
-\end{align}
-\end{subequations}
-
-\begin{figure}[h]
-\begin{center}
-\includegraphics{imgs/swimgamma.pdf}
-\caption{There is a sharp change in the sWIM closer to 0.40. This is similar to the previous examples when the elbow level off close to 0.40. }
-\end{center}
+\begin{figure}
+	\begin{center}
+		\includegraphics{imgs/prior_histograms1.pdf}
+	\end{center}
+	\caption{Frontier skew-normal: different priors. Beta total variation prior (BTV)}\label{fig:skew_prior}
+\end{figure}
+\begin{figure}
+	\begin{center}
+		\includegraphics{imgs/posterior_histograms1.pdf}
+	\end{center}
+	\caption{Frontier skew-normal: posteriors under different priors. This are standard posteriors for the different prior. The posteriors are all positively skewed unlike the priors in \cref{fig:skew_prior} but with different modes. Beta total variation prior (BTV).}\label{fig:skew_pos}
 \end{figure}
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics{imgs/betagamma.pdf}
-\end{center}
-\end{figure}
-\end{comment}
-\section{Conclusion}
-\clearpage
-\begin{appendices}
+
+\section{Conclusion and discussions}
+In this study, we explored prior-to-posterior transitions using power posteriors. We have demonstrated that power posteriors weight the sample size, making them similar to subsampling techniques.  The region from $\gamma =0$ to $\gamma =1$ forms a continuous path, transitioning smoothly from the prior distribution to the power posteriors, including the standard posterior. The distance between the prior and the standard posterior increases from $\gamma =0$ to $\gamma =1$. 
+The power posterior converges to the standard posterior as the power value increases. For conjugate cases, the posterior distribution stabilizes at lower power values, which we confirmed using the Wasserstein distance. Using density plots, we see that the prior transitions to power posteriors closer to the standard posterior at lower $\gamma$ values suggesting that power posteriors can be a good alternative for parameter inference. They are currently used to handle model misspecification \citep{Jeffrey_2019}.
+
+We also provided derivations of power posteriors for conjugate cases.  Additionally, power posteriors can be applied with lower power values to derive data-driven priors. This involves using a part of the data to create these priors and the remainder for the main analysis.
+
+Furthermore, power posteriors allow for the use of improper priors with a subset of the data to derive proper priors, which are then utilized in subsequent analysis. This approach is similar to the fractional \gls{bf} approach proposed by \cite{ohaganPropertiesIntrinsicFractional1997}, where updating an improper prior with a portion of the data helps refine it into a proper prior for the main analysis.
+
+
+\section*{Code and data availability}
+The complete code used to generate the results will be available in a public repository upon submission.
+
+\section*{Competing interests}
+The authors declare no competing interests. 
+
+\section*{Acknowledgements}
+This work was funded under the Luxembourg National Research Fund under the
+PRIDE programme (PRIDE17/12252781).
+
+
+%\begin{appendices}
 \jsh{These appendices are not referenced in the main text}
-\section{Normal-normal conjugate case with unknown mean}
-\subsection{Standard posteriors,  $\gamma = 1$.}
-\jsh{All cases: Once you have the derivations for the standard result which do
-not need to be repeated, these are three or four line proofs.}
-\jsh{Use ams theorem environment}
-\jsh{There is no statement of what you will prove, or definitions of any of the terms}
-\jsh{There is no explanation or text to explain these derivations. This is a totally standard result and should just be repeated 'as a matter of fact'.}
-\jsh{Aren't the likelihood and prior specified?}
-\jsh{You cannot split equations across the result and its proof}
-\begin{equation*}
-\begin{aligned}
-    x_i &|\mu\sim \mathcal{N}(\mu,\sigma^2),\quad \bar{x}= \frac{(\Sigma x_i)}{n}\\
-    &\implies \bar{x}|\mu \sim \mathcal{N}(\mu,\sigma^2)\\
-    p(x_1,\ldots,x_n|\mu)&\propto \frac{1}{\sigma}\exp\left(-\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
-    \text{Proof}\\
-    &\propto \exp\left(-\frac{1}{2\sigma^2}\sum(x_i^2-2x_i\mu +n\mu^2)\right)\\
-    &\propto \exp\left(-\frac{n}{2\sigma^2}(-2\bar{x}\mu + \mu^2)\right)\\
-     &\propto \exp\left(-\frac{n}{2\sigma^2}(\bar{x} - \mu)^2\right)\\
-     &\propto p(\bar{x}, \mu)\\
-\text{Likelihood} \\
-    x_i &|\mu\sim \mathcal{N}(\mu,\sigma^2)\\
-\text{Prior}\\
-\mu &\sim \mathcal{N}(\mu_0,\sigma^2_0)
-    \end{aligned}
-\end{equation*}
-\begin{equation*}
-\begin{aligned}
-(Z_1, Z_2) &\sim \mathcal{N}_2 \left(\mu, \Sigma \right)\\
-    E(Z_1 | Z_2) &= E(Z_1) + \frac{\text{Cov}(Z_1, Z_2)}{\text{Var}(Z_2)} \left( Z_2 - E(Z_2) \right) \\
-    \text{Var}(Z_1 | Z_2) &= \text{Var}(Z_1) - \frac{\text{Cov}(Z_1, Z_2)}{\text{Var}(Z_2)}\\
-   x &\rightarrow Z_2 \quad \mu \rightarrow Z_1\\
-   x&= \mu+\sigma\epsilon \quad \epsilon \sim N(0,1)\\
-   \mu &= \mu_0 + \sigma\delta \quad \delta \sim N(0, 1)\\
-   E(x) &= \mu_0\\
-   & \text{Var}(x) = E[\text{Var}(x \mid \mu)] + \text{Var}[E(x \mid \mu)] \\
-   & \quad = E[\sigma^2] + \text{var}(\mu) \\
-   & \quad = \sigma^2 + \sigma_0^2.\\
-    \text{Cov}(x, \mu) &= E[(x - \mu_0)(\mu - \mu_0)] \\
-    &= E[x\mu - \mu_0 \mu - \mu_0 x + \mu_0^2] \\
-    &= E[x\mu - \mu_0^2 - \mu_0 x + \mu_0^2] \\
-    &= \sigma^2 \\
-    E(\mu \mid x) &= \mu_0 + \frac{\sigma_0^2}{\sigma^2 + \sigma_0^2}(x - \mu_0) \\
-    \text{Var}(\mu \mid x) &= \frac{\sigma^2 \sigma_0^2}{\sigma^2 + \sigma_0^2} \\
-    &= \left( \frac{1}{\sigma_0^2} + \frac{1}{\sigma^2} \right)^{-1} \\
-    &= (\tau_0 + \tau)^{-1}\\
-    E(\mu \mid \bar{x}) &= \mu_0 + \frac{\sigma^2}{\sigma^2 + \sigma_0^2}(\bar{x} - \mu_0)
-\end{aligned}
-\end{equation*}
+\appendix
+\section{Appendix}
+\subsection{Power posteriors for conjugate cases}\label{appen}
+	\begin{theorem}
+		\label{proof:pow_norm}
+		Let  $m$  be a parameter normally distributed with prior mean $m_0$ and prior variance $\sigma^2_0$. The observed data is $x = (x_1, ..., x_n)$ with sample mean $\bar{x}$ and the data model is $x\overset{\mathrm{iid}}{\sim} \mathcal{N}(m,\sigma^2)$.
+		The power posterior can be written
+		
+		\begin{equation}
+			m \;|\; \bar{x}, \gamma \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right).\notag
+		\end{equation}
+		
+		\begin{proof}
+			The standard posterior $\gamma=1$ is a normal distribution and can be expressed as 
+			\begin{equation*}
+				m \;|\; \bar{x} \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \left(\frac{m_0}{\sigma_0^2} + \frac{n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{n}{\sigma^2} \right)^{-1} \right),
+			\end{equation*}
+			\cite[see e.g.][]{gelman_bayesian_2020} for proof.
+			Taking the normal likelihood and raising it to the power $\gamma$ gives 
+			\begin{align}
+				p(\bar{x} \;|\ m)^\gamma &\propto \exp\left(-\frac{n}{2\sigma^2}{(\bar{x} - m)^2}\right)^\gamma \notag\\
+				& \propto \exp\left(-\frac{\gamma n}{2\sigma^2}{(\bar{x} - m)^2}\right). \notag
+			\end{align}
+			
+			Then, the power posterior can be derived by making the substitution $ \sigma^2 \to \frac{\sigma^2}{\gamma}$ into the standard posterior.
+		\end{proof}
+	\end{theorem}
+	
+	\begin{theorem}
+		\label{proof:pow_ing}
+		Let $m$ be the mean and $\sigma^2$ be the unknown variance. The observed data is denoted as $x = (x_1, ..., x_n)$. The prior variance follows the inverse gamma distribution with shape parameter $\alpha$ and scale parameter $\beta$. The data model is $x\overset{\mathrm{iid}}{\sim} \mathcal{N}(m,\sigma^2)$. The power posterior can be written as
+		
+		\begin{equation}
+			\sigma^2 \;|\; s^2, \gamma \sim \mathrm{IG}\left(\alpha+ \frac{\gamma n}{2}, \beta+\frac{\gamma n}{2}s^2\right),\notag
+		\end{equation}
+		where, $s^2 = (\sum_{i} \left( x_i - \mu \right)^2)/n$ is the  sample
+		variance.
+		
+		\begin{proof}
+			The standard posterior $\gamma=1$ is an inverse gamma and can be expressed as    
+			
+			\begin{equation*}
+				\sigma^2  \;|\; s^2 \sim \mathrm{IG}\left(\alpha + \frac{n}{2}, \beta + \frac{1}{2} \sum(x_i - m)^2 \right),
+			\end{equation*}
+			\cite[see e.g.][]{gelman_bayesian_2020} for proof.
+			Taking the normal likelihood and raising it to the power $\gamma$ gives 
+			\begin{equation*}
+				p(x_1\ldots,x_n|\sigma^2)^{\gamma}=(\sigma^2)^{-\frac{\gamma n}{2}}\exp\left(-\frac{\gamma}{2\sigma^2}\sum(x_i-m)^2\right).
+			\end{equation*}
+			This power posterior can be derived by inspection and substituting  $\alpha+ \frac{n}{2} \to \alpha+ \frac{\gamma n}{2}$ and $\beta+\frac{1}{2}\sum(x_i -m)^2 \to \beta+\frac{\gamma}{2}\sum(x_i -m)^2$  in the standard posterior. 
+		\end{proof}
+	\end{theorem}
+	
+	\begin{theorem}
+		\label{proof:poisson_gamma}
+		Let $\lambda$ be the rate parameter of the Poisson distributions, the observed data is $x = (x_1,\ldots, x_n)$ and the data model is $x \overset{\mathrm{iid}}{\sim} \text{Poisson}(\lambda)$. When $\lambda$ has a gamma prior with parameters $\alpha$ and $\beta$, the power posterior can be written as
+		
+		\begin{equation*}
+			\lambda \mid \bar{x} \sim \mathrm{Gamma}\left(\gamma  n \bar{x} + \alpha, \gamma n + \beta\right).
+		\end{equation*}
+		
+		\begin{proof} 
+			The standard posterior $\gamma=1$ is a gamma distribution and can be expressed as 
+			\begin{align*}
+				\lambda \mid  \bar{x} &\sim \text{Gamma}\left( n \bar{x} + \alpha, n + \beta\right)\\
+				\bar{x}&=\sum x_i/n,
+			\end{align*}
+			\cite[see e.g.][]{gelman_bayesian_2020} for proof.
+			Raise the likelihood to the power $\gamma$ 
+			
+			\begin{equation}
+				p(x\mid\lambda)^\gamma = \frac{e^{-n \gamma \lambda}\lambda^{\sum x_i}}{\prod_{i=1}^n(x_i !)\gamma}
+			\end{equation}
+			The power posterior can be derived by substituting 
+			$\sum x_i + \alpha \to  \gamma \sum x_i + \alpha$ and  $n + \beta \to  \gamma n + \beta$ in the standard posterior.
+		\end{proof}
+	\end{theorem}
 
-\subsection{Power posteriors, $\gamma \in [0,1]$.}
-\jsh{Third equation is incorrect}
-\begin{equation*}
-\begin{aligned}
-  p(x|\mu)^\gamma&\propto \frac{1}{\sigma}\exp\left(-\frac{1}{2\sigma^2}(x_i-\mu)^2\right)^\gamma\\
-    (e^m)^\gamma &= e^{\gamma\relax m}, \quad (ae^m)^\gamma = a^{\gamma}e^{m\gamma}\\
-p(x|\mu)^\gamma&\propto \frac{1}{\sigma\gamma}\exp\left(-\frac{\gamma}{2\sigma^2}(x-\mu)^2\right)\\
- x &|\mu \sim \mathcal{N}\left(\mu,\frac{\sigma^2}{\gamma}\right)\\
-\bar{x} &|\mu \sim \mathcal{N}\left(\mu,\frac{\sigma^2}{\gamma\relax n}\right)\\
-    E(\mu \mid \bar{x}) &= \mu_0 + \frac{\sigma_0^2}{\frac{\sigma^2}{\gamma \relax n} + \sigma_0^2}(\bar{x} - \mu_0) \\ 
-    \text{Var}(\mu \mid \bar{x})&= \left( \frac{1}{\sigma_0^2} + \frac{\gamma\relax n}{\sigma^2} \right)^{-1} \\
-       E(\mu \mid \bar{x}) &= \frac{1}{\frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2}} 
-    + \left( \frac{\mu_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2} \right)\\
-    \text{Var}(\mu \mid \bar{x})&= \left( \frac{1}{\sigma_0^2} + \frac{\gamma\relax n}{\sigma^2} \right)^{-1} \\
-    \end{aligned}
-\end{equation*}
-\begin{equation}
-\mu \;|\; x \sim \mathcal{N} \left( \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \left(\frac{\mu_0}{\sigma_0^2} + \frac{\gamma n \bar{x}}{\sigma^2}  \right), \left( \frac{1}{\sigma_0^2} + \frac{\gamma n}{\sigma^2} \right)^{-1} \right)
-\end{equation}
-
-\section{Inverse-Gamma conjugate case with unknown variance}
-\jsh{These results are all standard and can just be summarised}
-\subsection{Standard posterior  $\gamma = 1$.}
-\begin{equation*}
-\begin{aligned}
-    p(x, \alpha,\beta) &= \frac{\beta^\alpha}{\Gamma(\alpha)} (x^2)^{-\alpha - 1} \exp\left(-\frac{\beta}{x}\right)\\
-p(x|\sigma^2) &= \frac{1}{\sigma} \exp\left(-\frac{1}{2\sigma^2} (x - \mu)^2 \right)
-    \end{aligned}
-\end{equation*}
-
-\textbf{Combine prior and likelihood}\\
-\jsh{Again, these results are standard so you can just repeat them, then explain the reasoning/logic behind the power posterior}
-\begin{equation*}
-\begin{aligned}
-p(\sigma^2 | \alpha, \beta) &\propto p(x|\sigma^2) p(\sigma^2| \alpha,\beta)\\
-&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{-\alpha - 1} \exp\left(-\frac{\beta}{\sigma^2}\right) \frac{1}{\sigma} \exp\left(-\frac{1}{2\sigma^2} (x - \mu)^2 \right)\\
-&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{-\alpha - 1}(\sigma^2)^{-\frac{1}{2}} \exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right)\\
-&=\frac{\beta^\alpha}{\Gamma(\alpha)} (\sigma^2)^{\alpha +\frac{1}{2} -1}\exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right)\\
-&\propto (\sigma^2)^{-\alpha +\frac{1}{2}-1}\exp\left(-\frac{\beta+\frac{1}{2}(x-\mu)^2}{\sigma^2}\right) \\
-\sigma^2 | x &\sim \text{IG}\left(\alpha + \frac{1}{2}, \beta + \frac{1}{2} (x - \mu)^2 \right)
-\end{aligned}
-\end{equation*}
-
-\textbf{Extension to multiple measurements}
-\begin{equation*}
-    \sigma^2 | x_1, \ldots, x_n \sim \text{IG}\left(\alpha + \frac{n}{2}, \beta + \frac{1}{2} \sum(x_i - \mu)^2 \right)
-\end{equation*}
-
-\begin{equation*}
-    \begin{aligned}
-        p(x_1, \ldots, x_n|\sigma^2 )= (2\pi)^{-\frac{k}{2}}\det\left(\Sigma\right)^{-\frac{1}{2}}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
-    \end{aligned}
-\end{equation*}
-\[\Sigma=\sigma^2I\]
-
-
-
-\begin{equation*}
-    \sigma^2 \mid x_1, \ldots, x_n \sim \text{IG}\left(\alpha + \frac{n}{2}, \beta + \frac{1}{2} \sum (x_i - \mu)^2 \right)
-\end{equation*}
-
-\begin{equation*}
-    \begin{aligned}
-        p(x_1, \ldots, x_n \mid \sigma^2) &= (2\pi)^{-\frac{k}{2}} \det(\Sigma)^{-\frac{1}{2}} \exp\left(-\frac{1}{2}(\underaccent{\tilde}{x} - \underaccent{\tilde}\mu)^T \Sigma^{-1} (\underaccent{\tilde}x - \underaccent{\tilde}\mu)\right)\\
-        \underaccent{=}\Sigma &= \sigma^2 I
-    \end{aligned}
-\end{equation*}
-
-\begin{equation*}
-    \begin{aligned}
-    \underaccent{=}\Sigma&=\det(\sigma^2\underaccent{=}I)(\sigma^2)^n1\\
-    &\propto(\sigma^{2n})^{-\frac{1}{2}}\exp\left(\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
-    &\propto(\sigma^{2})^{-\frac{n}{2}}\exp\left(\frac{1}{2\sigma^2}\sum(x_i-\mu)^2\right)
- \end{aligned}
-\end{equation*}
-
-\subsection{Power posteriors, $\gamma \in [0,1]$.}
-\begin{equation}
-    \begin{aligned}
-        [p(x_1, \ldots, x_n \mid \sigma^2)]^\gamma &=(\sigma^{2})^{-\frac{\gamma n}{2}}\exp\left(-\frac{\gamma}{2\sigma^2}\sum(x_i-\mu)^2\right)\\
-        \sigma^2 &| x_1, \ldots, x_n \sim \text{IG}\left(\alpha+ \frac{\gamma n}{2}, \beta+\frac{\gamma}{2}\sum(x_i -\mu)^2\right)
-    \end{aligned}
-\end{equation}
-\end{appendices}
-\section{Poisson-Gamma conjugate case with unknown rate}
-\subsection{Standard posterior $\gamma=1$.}
-\begin{equation*}
-    \begin{aligned}
-        P(x \mid \lambda) &= Pr(x=k)\\
- &=\frac{\lambda^ke^{-\lambda}}{k!}
-    \end{aligned}
-\end{equation*}
-
-\textbf{Multiple measurements}
-\begin{equation*}
-    \begin{aligned}
-        P(\underaccent{\tilde}x \mid \lambda) &= \prod_{i=1}^n \frac{\lambda^{x_i} e^{-\lambda}}{x_i!}\\
-        &= \frac{e^{-n \lambda}\lambda^{\sum x_i}}{\prod_{i=1}^n (x_i!)}
-    \end{aligned}
-\end{equation*}
-\subsection{Power posteriors, $\gamma \in [0,1]$.}
-\begin{equation*}
-    \begin{aligned}
-[P(\underaccent{\tilde}x \mid \lambda)]^\gamma &=  \frac{e^{-n \gamma\lambda}\lambda^{\gamma\sum x_i}}{\prod_{i=1}^n (x_i!)\gamma}\\
-         p(\lambda) &= \frac{\beta^\alpha}{\Gamma(\alpha)} \lambda^{\alpha-1} e^{-\beta \lambda},\quad \lambda >0\\
-          P(\underaccent{\tilde}x \mid \lambda)  p(\lambda)&= \lambda^{\sum x_i + \alpha - 1} e^{-(n\lambda + \beta\lambda)} \frac{\beta^\alpha}{\Gamma(\alpha)}\\
-    \end{aligned}
-\end{equation*}
-
-\jsh{Remove under accent tildes, not necessary}
-\begin{equation}
-    \lambda|\underaccent{\tilde}x \sim \text{Gamma}\left(\gamma\sum x_i+\alpha, \gamma n+\beta\right)
-\end{equation}
-
+%\end{appendices}
 \bibliographystyle{apacite}
 \bibliography{ref}
-
 \end{document}
