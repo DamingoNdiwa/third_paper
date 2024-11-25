@@ -42,6 +42,7 @@ distances and the power posterior}
 \newacronym{mcmc}{MCMC}{Markov Chain Monte Carlo}
 \newacronym{ott}{OTT}{Optimal Transport Tools}
 \newacronym{tfp}{TFP}{Tensorflow Probability}
+\newacronym{kl}{KL}{Kullback–Leibler}
 
 
 \begin{document}
@@ -52,7 +53,8 @@ distances and the power posterior}
 
 \begin{abstract}
 
-To ensure the robustness of parameter estimates against prior specifications, it is essential to assess whether varying priors yield differing posterior results. Assessing the impact of priors is necessary to determine if they lead to contradictory conclusions. For instance, the recently proposed Wasserstein Impact Measure quantifies the distance between two posterior distributions induced by different priors given a fixed likelihood and dataset. However, this measure does not account for potential model misspecification. One approach to address model misspecification is the use of power posteriors. In this study, we leverage Wasserstein distance and power posteriors to gain insights into the transitions from prior to posterior distributions. Also, we demonstrate that power posteriors are equivalent to subsampling and provide derivations for power posteriors in conjugate cases.
+This study investigates how priors transition to posteriors. We analyse this transition by calculating the Wasserstein distance between the priors and the power posteriors. Power posteriors are obtained by raising the likelihood function to values between zero and one, forming a continuous path from the prior to the full posterior. Additionally, we have introduced the concept of saturation sample size and illustrated that it can
+be used to reduce the sample size in various studies. The saturation sample size is the number of observations that contain the same amount of information as the entire dataset. Thus, the saturated sample size is important when it is challenging to have larger sample sizes, such as in clinical trials involving rare diseases or when individuals are reluctant to participate in a survey.
 
 \end{abstract}
 
@@ -68,12 +70,17 @@ posterior via the likelihood.}
 
 Priors are a crucial element of Bayesian analysis, and the choices made can significantly impact parameter inference. Various methods have been developed to assess the impact of priors, one of which is the \gls{wim} \citep{ghaderinezhadWassersteinImpactMeasure2022}. The \gls{wim} is the Wasserstein distance between two posteriors resulting from two different priors for a given data set. The \gls{wim} is a relative measure of impact between standard posteriors. However, the methods of prior impact assessment, including the \gls{wim}, do not tell us how the priors transition to the posterior.
 
-Moreover, the \gls{wim} has limitations in its interpretability; for instance, a value of 2.0 does not indicate whether one prior has a higher or lower impact than the other. To illustrate, consider a scenario where the \gls{wim} value is 2.0 for two different priors. This value alone does not provide information on which prior has a higher impact, making it difficult to interpret the results.
+Moreover, the \gls{wim} has limitations in its interpretability; for instance, a value of 2.0 does not indicate whether one prior has a higher or lower impact than the other. To illustrate, consider a scenario where the \gls{wim} value is 2.0 for two different priors. This value alone does not provide information on which prior has a higher impact, making it difficult to interpret the results. With theses limitations, there is a need to understand how priors impact inference. Also, to how to set up priors that have minimal influence on the posterior. 
 
-This study employs power posteriors and Wasserstein distances to gain insights into prior to posterior transitions. Power posteriors have been used in many applications, such as calculating the marginal  likelihood \citep{friel2008marginal} and calculating the objective \gls{bf} \citep{ohaganPropertiesIntrinsicFractional1997}, where they are referred to as fractional posteriors. They have also been applied to sample across multimodal distributions and are used to set up power priors \citep{Dimitris_2015, Joseph_2000} for robust Bayesian inference  \citep{Jeffrey_2019}. For conjugate cases, we derive and make use of analytic power posteriors. We use graphs to illustrate how the priors transition to the posteriors.
+This study employs power posteriors and Wasserstein distances to gain insights into prior to posterior transitions. Power posteriors have been used in many applications, such as calculating the marginal  likelihood \citep{friel2008marginal} and calculating the objective \gls{bf} \citep{ohaganPropertiesIntrinsicFractional1997}, where they are referred to as fractional posteriors. They have also been applied to sample across multimodal distributions and are used to set up power priors \citep{Dimitris_2015, Joseph_2000} for robust Bayesian inference  \citep{Jeffrey_2019}. For conjugate cases, we derive and make use of analytic power posteriors. We use graphs to illustrate how the priors transition to the posteriors.  
+
+
+The sample size is critical for inference. However, it might be difficult to have large sample sizes for some studies. Fortunately, some sample sizes can give the same amount of information as large sample sizes. Thus, linking sample sizes and power posteriors and saturation sample sizes is essential. 
+
 \subsection{Contribution}
-The main contributions of this paper are as follows. Using the concept of the power posterior we construct a continuous family of posteriors between prior and posterior by raising the usual likelihood to a power posterior constant $\gamma \in [0, 1]$. To give a visual intuition of this transition, in \cref{fig:skew_normal_powpos} we show posterior density plots of the power posteriors living between a uniform prior and the standard posterior for a parameter describing the skewness of a dataset. When $\gamma = 0.00$, the prior distribution is uniform, spanning a broad range of values from -50 to 50. As $\gamma$ increases from 0.00 to 0.20, the prior gradually transitions into a right-skewed power posterior, constrained to positive values from 0 to 50. For $\gamma$ values greater than or equal to 0.25, the peak shifts more to the right and the power posterior has a narrower range of values from 0.0 to 25. 
+The main contributions of this paper are as follows. Using the concept of the power posterior we construct a continuous family of posteriors between prior and posterior by raising the usual likelihood to a power posterior constant $\gamma \in [0, 1]$. To give a visual intuition of this transition, posterior density plots of the power posteriors living between a prior say uniform prior and the standard posterior for a parameter can be made.
 
+\begin{comment}
 \begin{figure}
 \begin{center}
 \includegraphics{imgs/uniform_pow.pdf}
@@ -83,6 +90,7 @@ The main contributions of this paper are as follows. Using the concept of the po
 	($0 < \gamma \leq 0.5$). Posterior based on the frontier data set for the
 	skew-normal distribution.}\label{fig:skew_normal_powpos}
 \end{figure}
+\end{comment}
 From the definition of the power posterior we derive extensions of three
 standard conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
 Poisson-Gamma cases. These conjugate results show that for an observed data set
@@ -92,9 +100,27 @@ $n$ to $n\gamma$.
 
 With the definition of the power posterior in hand we then observe the
 evolution of the Wasserstein distance between power posterior measures
-$\mu_{\gamma}$ and the fixed prior measure $\mu_{0}$. These plots typically show a sudden change in the Wasserstein distance as $\gamma$ is increased just beyond zero (the prior is moved a large distance by a small effective sample size of the data). As $\gamma$ is increased at some point the distance `saturates' and increasing $\gamma$ further (i.e. increasing the effective sample size) does not lead to the posterior moving significantly further away from the prior. This saturation region gives us an indication of a saturation sample size, that is, at which adding more data into the problem (implicitly
+$\mu_{\gamma}$ and the fixed prior measure $\mu_{0}$. These plots typically show a sudden change in the Wasserstein distance as $\gamma$ is increased just beyond zero (the prior is moved a large distance by a small effective sample size of the data). As $\gamma$ is increased at some point the distance `saturates' and increasing $\gamma$ further (i.e. increasing the effective sample size) does not lead to the posterior moving significantly further away from the prior. This saturation region gives us an indication of a saturated sample size, that is, at which adding more data into the problem (implicitly
 via the parameter $\gamma$) does not lead to an increase in the distance
-between the power posterior and the prior. 
+between the power posterior and the prior.  A formal definition of the saturated sample size is the effective sample size at which 
+
+\begin{comment}
+\[W_t = CrI \cdot W_{\mu_0,\gamma_1}\]
+The saturated sample size is then given by:
+\[m_{sat}=\gamma_{W_t​}\cdot n\]
+where $\gamma_{W_t​}$  is the $\gamma$ at which $W_t$ becomes constant.
+\end{comment}
+The saturated sample size $m_{\text{sat}}$ is the total sample size $n$ scaled by the value of $\gamma$ at which the Wasserstein distance between the prior and the standard posterior becomes constant. The scaling factor, $W_t$, is computed as the product of the credible interval ($\text{CrI}$) and the Wasserstein distance between the prior and the standard posterior $W_{\mu_0, \gamma_1}$.
+
+\[
+W_t = \text{CrI} \cdot W_{\mu_0, \gamma_1}
+\]
+The saturated sample size is then given by:
+\[
+m_{\text{sat}} = \gamma_{W_t} \cdot n
+\]
+where $\gamma_{W_t}$ is the $\gamma$ at which $W_t$ becomes constant.
+
 
 We demonstrate through simulations that subsampling is equivalent to power posteriors, where the power $\gamma$ serves as a weight for the data, resulting in a reduced sample size.
 
@@ -102,7 +128,7 @@ In addition to looking at an prior to posterior transition for a single fixed pr
 
 \section{Methodology}
 
-This section covers the concepts and methodologies used in this study, such as power posteriors, Wasserstein distance calculations, subsampling, and numerical methods.
+This section covers the concepts and methodologies used in this study, such as power posteriors, Wasserstein distance calculations, subsampling, and numerical methods. We make use of conjugate cases where the power posteriors are available in closed. 
 	
 \subsection{Power posterior}
 We briefly recall the mathematical concept of the power posterior (sometimes
@@ -121,10 +147,11 @@ is straightforward to see that for $\gamma = 0$ we recover the usual Bayesian
 prior $p(\theta)$ and for $\gamma = 1$ we recover the standard Bayesian
 posterior $p(\theta \, | y)$. We emphasise that for intermediate values $\gamma
 \in (0, 1)$ the resulting set of power posteriors forms a continuous
-transition between the standard prior and posterior distribution. The likelihood  $p(x|\theta)$ reflects how likely it is for a parameter to generate the data. We can see from $\gamma \log p(x|\theta)$ that $\gamma$ 
+transition between the standard prior and posterior distribution. The likelihood  $p(x|\theta)$ reflects how likely it is for a parameter to generate the data. If we take the $\log$ of $p(x \, | \, \theta)^\gamma$ we can see from $\gamma \log p(x|\theta)$ that $\gamma$ 
 controls the relative weight of the log-likelihood (and consequently the data) with respect to the log-prior.
 
 \subsection{Wasserstein distance}
+Various measures are used to quantify the discrepancies between distributions. These measures involve computing the  \gls{kl} and chi-square divergence. However, these divergences \citep{aliGeneralClassCoefficients1966} are not symmetric, and even when symmetric versions exist, other challenges arise. For instance, the \gls{kl} divergence is undefined if the intersection of the support of the two distributions in question is a null set. In contrast, Wasserstein distance is symmetric, can be computed between discrete and continuous probability distributions, considers the geometry of the parameter space \citep{panaretos2019statistical}, and is a well-defined metric. Therefore, we employ the Wasserstein distance.
 The definition of the $p$-Wasserstein distance ($W_p$) between two probability
 measures $\mu, \nu$ defined on the space $\mathcal{X}$  is 
 \begin{equation}
@@ -134,32 +161,30 @@ W_p(\mu, \nu) = \inf_{\pi \in U(\mu, \nu)} \left(\int_{\mathcal{X} \times \mathc
 where $U(\mu, \nu)$ is the set of joint probability measures on
 $\mathcal{X}\times \mathcal{X}$ \citep{villaniOptimalTransportOld2009}, $x$ and $y$ are points in the space $X$. The
 Wasserstein distance has a natural interpretation as the minimum amount of work
-required to reconfigure the mass of one distribution into another. Calculating
+required to reconfigure the mass of one distribution into another.
+
+\begin{comment}
+ Calculating
 the Wasserstein distance becomes non-trivial in moderate to high dimensions due
 to the ill-posed nature of the squared Euclidean distance
 \citep{cuturiMongeBregmanOccam2023}. 
+\end{comment}
 
 \subsection{Subsampling}
 Subsampling refers to the method of drawing a random sample from a dataset to analyse it as a representative of the complete dataset \citep{Drineas_2006, yaoReviewOptimalSubsampling2021, Ma_2014}. Consider $\{x_i\}_{i=1}^n$ are $n$ independent and identically distributed observations. We can draw a subsample of size $m$ from the entire sample of size $n$ with sampling probabilities $\{\pi_i\}_{i=1}^n$ on each observation. The observations have equal sampling probabilities. The motivation for subsampling is to avoid the computational expense of analysing the entire data set. 
 
-Subsampling is similar to using power posteriors. When working with large datasets, using power posteriors with a power value close to 1 can be a practical strategy to manage computational complexity and reduce the impact of model misspecification. To demonstrate this, we calculated the expectation of the Wasserstein distance between the priors and the standard posterior across multiple subsamples of size $m= \gamma n$, where $m$ is the subsample size, $n$ is the size of the entire dataset, and $\gamma$ varies for each subsample. We also calculated the Wasserstein distances between the priors and their corresponding power posteriors. We found that the expectation of the Wasserstein distance between the prior and the standard posterior with respect to subsampling converges to the same value as the Wasserstein distance between the priors and the power posteriors.
+Subsampling is similar to using power posteriors. When working with large datasets, using power posteriors with a power value close to 1 can be a practical strategy to manage computational complexity and reduce the impact of model misspecification. To demonstrate this, we calculated the expectation of the Wasserstein distance between the priors and the standard posterior across multiple subsamples of size $m= \gamma n$, where $m$ is the subsample size, $n$ is the size of the entire dataset, and $\gamma$ varies for each subsample. We also calculated the Wasserstein distances between the priors and their corresponding power posteriors. This enables us to compare the Wasserstein distance between the prior and the standard posterior with respect to subsampling and the Wasserstein distance between the prior and the power posteriors.
 
+\begin{comment}
+We found that the expectation of the Wasserstein distance between the prior and the standard posterior with respect to subsampling converges to the same value as the Wasserstein distance between the priors and the power posteriors.
+\end{comment}
 \subsection{Posterior measures}
-This section introduces several measures used in the results section:
-\begin{itemize}
-	\item $\mu_0$: prior distribution.
-	\item $\mu_{\gamma}$: power posterior where $\gamma \in [0, 1]$.
-	\item $W_2^2(\mu_{\gamma}, \mu_0)$: The squared 2-Wasserstein distance between the power posterior and the prior distribution.
-\end{itemize}
-
- The expectation with respect to subsamples between a standard posterior $\mu$ and the prior is defined as 
- 
- \begin{equation}
- E [W_2^2(\mu, \mu_0)] = \frac{1}{S}\sum_{i=1}^{S} W_2^2(\mu, \mu_0),
- \label{eq:wasser_ex}
- \end{equation}
- 
-where $S$ is the number of subsamples, each of size  $m$ drawn from the full data set of size $n$.
+In this section, we introduce several measures that will be important in the results section. The first measure is the prior distribution, $\mu_0$, representing our initial beliefs or assumptions before analysing any data. Next, we have the power posterior, $\mu_{\gamma}$, which is a variation of the standard posterior that raises the likelihood to a constant $\gamma$, ranging from 0 to 1, to adjust the influence of the data on inference. Another key measure is the squared 2-Wasserstein distance between the power posterior and the prior distribution $W_2^2(\mu_{\gamma}, \mu_0)$. Moreover, we define the expectation of 
+this squared 2-Wasserstein distance between a standard posterior $\mu_1$ and the prior $\mu_0$ as the average of these distances across multiple subsamples from the dataset. This expectation is calculated as  \begin{equation}
+	E [W_2^2(\mu_1, \mu_0)] = \frac{1}{S}\sum_{i=1}^{S} W_2^2(\mu_1, \mu_0),
+	\label{eq:wasser_ex}
+\end{equation}
+where $S$ represents the number of subsamples, each of size $m$, drawn from the full dataset of size $n$. 
  
 \subsection{Numerical methods}
 We give a brief overview of the numerical methods used to generate the results.
@@ -195,7 +220,7 @@ SciPy \citep{2020SciPy-NMeth}.
 For the multi-dimensional case we cannot use to the Vallender formula to
 compute the Wasserstein distance. Instead we use recent advances in
 computational optimal transport to estimate the Wasserstein distance.
-Specifically, we use entropic regularized optimal transport proposed in
+Specifically, we use entropic regularised optimal transport proposed in
 \citep{NIPS2013_af21d0c9} and its implementation within the \gls{ott} library
 \citep{cuturi2022optimal}. 
 
@@ -203,25 +228,26 @@ Specifically, we use entropic regularized optimal transport proposed in
 All code and data used to produce the results in this paper will be available
 as supplementary material upon journal submission.
 
-\section{Overview of methodology}
+\section{Summary of methodology}
+This section gives a concise overview of the methodology.  We employ conjugate cases where the power posteriors are available in closed. A conjugate case occurs when the prior and the posterior distributions are of the same family. We formally introduce the concept of saturation sample size, which links subsampling to power posteriors. The connection is demonstrated by subsampling with different sample sizes. 
+
 \subsection{Evolution of the Wasserstein distances}
 \begin{enumerate}
-	\item Generate data from the models.
+	\item Generate data from the models. This step is necessary since we use synthetic data, and the step is not required if observed data is available.
 	\item Set up different priors and a likelihood function. Obtain the power posteriors. For conjugate cases, the power posteriors are available in closed form. 
 	\item Compute the Wasserstein distances between the priors and their corresponding power posteriors. The Wasserstein distance is available in closed form for a normal prior and a normal likelihood function. 
-	\item Make plots of the Wasserstein distances against $gamma$ for the different priors.
 \end{enumerate}
 
-\subsection{subsampling}
+\subsection{Subsampling}
+
 \begin{enumerate}
 	\item Set up a sequence of $\gamma$ values from 0 to 1. For each value of $\gamma$, compute the Wasserstein distances between the priors and the power posteriors using the entire dataset. 
 	\item For each value of $\gamma$, draw $S$ subsamples, each of size $m$ from the entire dataset, where \[m=\gamma n,\] with $\gamma \in [0, 1]$ representing the power, and $n$ is the sample size of the entire data set.
-\begin{itemize}
 	\item For each subsample, compute the Wasserstein distances between the priors and the respective standard posteriors.
 	\item Compute the expectation of the Wasserstein distances across the $S$ subsamples.
-	\item  Make plots of the Wasserstein distances and the expectation against the values of $\gamma$.
-\end{itemize}
+	\item Also, take note of the saturation sample size.
 \end{enumerate}
+	The saturation sample size is the number of observations needed to achieve a value of $\gamma$ at which the Wasserstein distance between the power posterior and the prior reaches $95\%$ or $99\%$ of the Wasserstein distance between the full posterior ($\gamma=1$) and the prior($\gamma=0$). In other words, the saturation sample size is the number of observations required to reach a critical value of $\gamma$. This critical value of $\gamma$ tells us the power posterior or the number of observations needed to construct the full posterior.
 
 
 
@@ -333,14 +359,32 @@ To demonstrate the relationship between subsample size and the power posterior, 
 
 In addition, \cref{fig:normal_normal_compare_with_subsampling} illustrates the convergence of the Wasserstein distance 1) between the prior ($\gamma=0$) and the power posteriors $\gamma \in (>0, 1)$ and  2) between the prior and the standard posteriors ($\gamma=1$)  as $\gamma$ increases. As $\gamma$ approaches 1, this convergence exemplifies the increasing similarity between the power and standard posteriors with subsampling. Also, the uncertainty in the standard posterior estimates decreases as $\gamma$ approaches 1, or in other words, as the subsample size increases. For higher values of $\gamma$, the power posteriors and the standard posteriors with subsampling will lead to similar results. 
 
-\FloatBarrier
 \begin{figure}[h!]
 \begin{center}
-\includegraphics{imgs/gauss_knownsigma_subsample.pdf}
+\includegraphics{imgs/sat_samplesize_100_99.pdf}
 \end{center}
-\caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling.}\label{fig:normal_normal_compare_with_subsampling}
+\caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling. The dashed lines represents the Wasserstein distance and the parameter $\gamma$ at the saturation sample size.}\label{fig:normal_normal_compare_with_subsampling}
 \end{figure}
 
+The saturation sample size is also shown in \cref{tab:satsize}. We see that a sample sizes are reduced from 1000 to 300 or 30 depending on the chosen credible interval. By employing the concept of saturation sample size require to get the same information as the total sample size drops. 
+
+
+\begin{table}[h]
+	\caption{Saturation sample size and credible intervals for the Normal prior Normal likelihood case.}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+		\begin{tabular}{ccccc} 
+			\hline
+			Wasserstein & $\gamma$ & Saturation & Total & Credible\\
+			distance& &sample size& sample size& intervals\\ [0.5ex] 
+			\hline 
+			1.873 & 0.0300 & 30 & 1000 & 95\%\\
+			1.979 & 0.300 & 300 & 1000 & 99\% \\
+			\hline
+		\end{tabular}
+	\label{tab:satsize}
+\end{table}
+\FloatBarrier
 \subsection{Inverse-Gamma conjugate case with unknown variance}
 Following standard arguments, it is possible to show that the distribution of
 the power posterior for the following Bayesian model with dataset $x = (x_1,
@@ -378,10 +422,10 @@ We explore how the Wasserstein distance between the prior and power posteriors c
 	\label{priors_invg}
 \end{table}
 
-The priors are used to fit three different models to the data with a normal likelihood. For each prior, the Wasserstein distance between the prior and the power posteriors is calculated. When using a non-informative prior, this distance increases with the value of $\gamma$, eventually levels off  at a $\gamma$ value between 0.1 and 0.2 (\cref{fig:ing_conju}). In contrast, the distance decreases initially for informative priors but eventually stabilizes. Nonetheless, as $\gamma$ increases, all priors converge to the same distance due to incorporating more data.
+The priors are used to fit three different models to the data with a normal likelihood. For each prior, the Wasserstein distance between the prior and the power posteriors is calculated. When using a non-informative prior, this distance increases with the value of $\gamma$, eventually levels off  at a $\gamma$ value between 0.1 and 0.2 (\cref{fig:ing_conju}). In contrast, the distance decreases initially for informative priors but eventually stabilises. Nonetheless, as $\gamma$ increases, all priors converge to the same distance due to incorporating more data.
 
 \FloatBarrier
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
         \includegraphics{imgs/inv_gamma_wasserstein_distance.pdf}     
 \end{center}
@@ -427,11 +471,11 @@ We investigate the impact of three different sets of priors on the posterior dis
 \end{table}
 
 
-We compute the squared Wasserstein distance between each prior and its corresponding power posterior. Our analysis indicates that as $\gamma$ increases, the distance also increases for non-informative priors, while it decreases with increasing $\gamma$ for informative but incorrect priors \cref{fig:poisson_ga_conju}. Eventually, the distances stabilize across all priors. Informative priors converge to the same values, and an elbow point is observed for all priors, beyond which the distance levels off. For the Inverse Gamma prior, this stabilization occurs just before reaching a value of 0.2.
+We compute the squared Wasserstein distance between each prior and its corresponding power posterior. Our analysis indicates that as $\gamma$ increases, the distance also increases for non-informative priors, while it decreases with increasing $\gamma$ for informative but incorrect priors \cref{fig:poisson_ga_conju}. Eventually, the distances stabilise across all priors. Informative priors converge to the same values, and an elbow point is observed for all priors, beyond which the distance levels off. For the Inverse Gamma prior, this stabilisation occurs just before reaching a value of 0.2.
 
 
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \begin{center}
    \includegraphics{imgs/poisson_gammawasserstein_distance.pdf}
        \end{center}
@@ -444,20 +488,37 @@ We compute the squared Wasserstein distance between each prior and its correspon
 \end{figure}
 
 
-To further study the relation between sampling and $\gamma$ , we draw 50 subsamples, each of size $m$ where $m =\gamma n$ with $n=100$. We then compute the squared Wasserstein distance between the prior and each subsample for different values of $\gamma$ and then the mean of the Wasserstein distance. Additionally, we calculate the distance between the priors and the power posteriors, and the results are presented in \cref{fig:poisson_ga_conju}. The squared Wasserstein distance converges more rapidly compared to the Normal normal case. The Wasserstein distance converges when $\gamma$ is below 0.2. Similar to the normal normal case, the uncertainty is greatest at lower values of $\gamma$, especially when the subsample size is smaller \cref{fig:poisson_gamma_sub}. 
+To further study the relation between sampling and $\gamma$ , we draw 50 subsamples, each of size $m$ where $m =\gamma n$ with $n=100$. We then compute the squared Wasserstein distance between the prior and each subsample for different values of $\gamma$ and then the mean of the Wasserstein distance. Additionally, we calculate the distance between the priors and the power posteriors, and the results are presented in \cref{fig:poisson_ga_conju}. The squared Wasserstein distance converges more rapidly compared to the Normal normal case. The Wasserstein distance converges when $\gamma$ is below 0.2. Similar to the normal normal case, the uncertainty is greatest at lower values of $\gamma$, especially when the subsample size is smaller as shown in  \cref{fig:poisson_gamma_sub}. 
 
-\FloatBarrier
+
 \begin{figure}
 \begin{center}
-\includegraphics{imgs/poisson_gamma_subsample3.pdf}
+\includegraphics{imgs/poisson_gamma_99.pdf}
 \end{center}
-\caption{Comparison of the distances for power posteriors and standard posteriors with subsampling. Poisson-Gamma conjugate case with unknown rate.}\label{fig:poisson_gamma_sub}
+\caption{Comparison of the distances for power posteriors and standard posteriors with subsampling. The dashed lines represents the Wasserstein distance and the parameter $\gamma$ at the saturation sample size. Poisson-Gamma conjugate case with unknown rate.}\label{fig:poisson_gamma_sub}
 \end{figure}
 
+We also calculated the saturation sample size, which is presented in Table \cref{tab:satsize}. The saturation sample size is reached at \(\gamma\) levels of 0.600 for a 95% credible interval and 0.700 for a 99% credible interval. This indicates that having 60 or 70 observations provides the same amount of information as the entire dataset.
 
+\begin{table}[h]
+	\caption{Saturation sample size and credible intervals for the Poisson Gamma model.}
+	\renewcommand{\arraystretch}{1.5}
+	\centering
+	\begin{tabular}{ccccc} 
+		\hline
+		Wasserstein & $\gamma$ & Saturation & Total & Credible\\
+		distance& &sample size& sample size& intervals\\ [0.5ex] 
+		\hline 
+		0.726 & 0.600 & 60 & 100 & 95\%\\
+		0.770 & 0.700 & 70 & 100 & 99\% \\
+		\hline
+	\end{tabular}
+	\label{tab:satsize}
+\end{table}
 
+\FloatBarrier
 \subsection{Skew-normal distribution}
-To gain more insight into prior-to-posterior transitions, we analyzed the frontiers data set found in the R package sn  \citep{azzalini2023}. \cite{ghaderinezhadWassersteinImpactMeasure2022} previously analyzed this data set. The data set is interesting because the maximum likelihood estimate of the coefficient of skewness lies on the boundary of the range [-0.995, 0.995] acceptable for the skew-normal family. The data was generated by drawing 50 samples from a skew-normal distribution with a skewness parameter 5.0. 
+To gain more insight into prior-to-posterior transitions, we analysed the frontiers data set found in the R package sn  \citep{azzalini2023}. \cite{ghaderinezhadWassersteinImpactMeasure2022} previously analysed this data set. The data set is interesting because the maximum likelihood estimate of the coefficient of skewness lies on the boundary of the range [-0.995, 0.995] acceptable for the skew-normal family. The data was generated by drawing 50 samples from a skew-normal distribution with a skewness parameter 5.0. 
 \begin{equation}
     f(x; \alpha) = \frac{2}{\sigma} \phi \left( \frac{x - \mu}{\sigma} \right) \Phi \left( \alpha \frac{(x - \mu)}{\sigma} \right), \quad x \in \mathbb{R}
     \label{skew_n}
@@ -525,18 +586,28 @@ skew-normal distribution.}\label{fig:ref_skew_normal_powpos}
 	\begin{center}
 		\includegraphics{imgs/posterior_histograms1.pdf}
 	\end{center}
-	\caption{Frontier skew-normal: posteriors under different priors. This are standard posteriors for the different prior. The posteriors are all positively skewed unlike the priors in \cref{fig:skew_prior} but with different modes. Beta total variation prior (BTV).}\label{fig:skew_pos}
+	\caption{Frontier skew-normal: posteriors under different priors. These are standard posteriors for the different priors. The posteriors are all positively skewed, unlike the priors in \cref{fig:skew_prior} but with different modes.
+	}\label{fig:skew_pos}
 \end{figure}
 
+We now explain the importance of the concepts of power posteriors and saturation sample sizes. Power posteriors can be employed to specify prior distributions \citep{ohaganPropertiesIntrinsicFractional1997}. The power posteriors that occur before reaching the saturation sample size can be used to construct weakly informative priors. These priors allow the likelihood to dominate the posterior but still provide minimal information about the parameters. This is because the Wasserstein distance between the prior and the power posteriors is highest at lower values of $\gamma$, implying that at lower values of $\gamma$, the prior has a high influence on the posterior.
 
+Another important application of power posteriors is in determining appropriate sample sizes. For example, in clinical trials, interim analyses are conducted to adapt patient recruitment strategies based on the results of these analyses. One of these strategies is reducing the original sample size or recruiting more patients for a specific treatment arm \cite{Berry2006, Ryan2022}. The saturation sample size can be used to decide if recruiting more patients will make any difference or to stop patient recruitment. This is of enormous importance in the case of rare diseases where patient recruitment is difficult or if there are ethical concerns. The saturation sample size can also inform when to stop recruiting more survey participants.
+
+
+
+
+\FloatBarrier
 \section{Conclusion and discussions}
 In this study, we explored prior-to-posterior transitions using power posteriors. We have demonstrated that power posteriors weight the sample size, making them similar to subsampling techniques.  The region from $\gamma =0$ to $\gamma =1$ forms a continuous path, transitioning smoothly from the prior distribution to the power posteriors, including the standard posterior. The distance between the prior and the standard posterior increases from $\gamma =0$ to $\gamma =1$. 
-The power posterior converges to the standard posterior as the power value increases. For conjugate cases, the posterior distribution stabilizes at lower power values, which we confirmed using the Wasserstein distance. Using density plots, we see that the prior transitions to power posteriors closer to the standard posterior at lower $\gamma$ values suggesting that power posteriors can be a good alternative for parameter inference. They are currently used to handle model misspecification \citep{Jeffrey_2019}.
+The power posterior converges to the standard posterior as the power value increases. For conjugate cases, the posterior distribution stabilises at lower power values, which we confirmed using the Wasserstein distance. Using density plots, we see that the prior transitions to power posteriors closer to the standard posterior at lower $\gamma$ values suggesting that power posteriors can be a good alternative for parameter inference. They are currently used to handle model misspecification \citep{Jeffrey_2019}.
 
 We also provided derivations of power posteriors for conjugate cases.  Additionally, power posteriors can be applied with lower power values to derive data-driven priors. This involves using a part of the data to create these priors and the remainder for the main analysis.
 
-Furthermore, power posteriors allow for the use of improper priors with a subset of the data to derive proper priors, which are then utilized in subsequent analysis. This approach is similar to the fractional \gls{bf} approach proposed by \cite{ohaganPropertiesIntrinsicFractional1997}, where updating an improper prior with a portion of the data helps refine it into a proper prior for the main analysis.
+Furthermore, power posteriors allow for the use of improper priors with a subset of the data to derive proper priors, which are then utilised in subsequent analysis. This approach is similar to the fractional \gls{bf} approach proposed by \cite{ohaganPropertiesIntrinsicFractional1997}, where updating an improper prior with a portion of the data helps refine it into a proper prior for the main analysis.
 
+We have also introduced the concept of saturation sample size, which has implications for clinical trials and survey statistics. The saturation sample size is the number of observations with the same amount of information as the entire dataset. This saturation sample size occurs at a $\gamma$ and power posterior. The power posterior corresponding to the value of $\gamma$ at saturation sample size can be used for inference as it provides the same information as the standard posterior. 
+It might be difficult to recruit more survey or clinical trial participants. In the case of clinical trials, an interim analysis can be done to determine if the saturation sample size has been reached. For survey statistics, the saturation sample size can be calculated in real time as more participants complete the survey. The study can be concluded once the saturation sample size has been reached.
 
 \section*{Code and data availability}
 The complete code used to generate the results will be available in a public repository upon submission.
