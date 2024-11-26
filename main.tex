@@ -92,7 +92,7 @@ The main contributions of this paper are as follows. Using the concept of the po
 \end{figure}
 \end{comment}
 From the definition of the power posterior we derive extensions of three
-standard conjugate results, namely the Normal-Normal, Normal-Inverse-Gamma and
+standard conjugate results, namely the Normal-Normal, Normal Inverse Gamma and
 Poisson-Gamma cases. These conjugate results show that for an observed data set
 of size $n$ the product $\gamma n$ as the effective sample size of the observed
 data, that is, $\gamma$ can be used to reduce the sample size of the data from
@@ -366,8 +366,7 @@ In addition, \cref{fig:normal_normal_compare_with_subsampling} illustrates the c
 \caption{Normal-normal conjugate case with unknown mean. Wasserstein distance between the prior and power posteriors compared to the distance between the prior and standard posterior with subsampling. The dashed lines represents the Wasserstein distance and the parameter $\gamma$ at the saturation sample size.}\label{fig:normal_normal_compare_with_subsampling}
 \end{figure}
 
-The saturation sample size is also shown in \cref{tab:satsize}. We see that a sample sizes are reduced from 1000 to 300 or 30 depending on the chosen credible interval. By employing the concept of saturation sample size require to get the same information as the total sample size drops. 
-
+The saturation sample size is also shown in \cref{tab:satsize}. We see that sample sizes can be reduced from 1000 to 300 or 30 depending on the chosen credible interval without compromising the information provided by the data.
 
 \begin{table}[h]
 	\caption{Saturation sample size and credible intervals for the Normal prior Normal likelihood case.}
@@ -424,7 +423,7 @@ We explore how the Wasserstein distance between the prior and power posteriors c
 
 The priors are used to fit three different models to the data with a normal likelihood. For each prior, the Wasserstein distance between the prior and the power posteriors is calculated. When using a non-informative prior, this distance increases with the value of $\gamma$, eventually levels off  at a $\gamma$ value between 0.1 and 0.2 (\cref{fig:ing_conju}). In contrast, the distance decreases initially for informative priors but eventually stabilises. Nonetheless, as $\gamma$ increases, all priors converge to the same distance due to incorporating more data.
 
-\FloatBarrier
+
 \begin{figure}[h]
 \begin{center}
         \includegraphics{imgs/inv_gamma_wasserstein_distance.pdf}     
@@ -435,7 +434,7 @@ power posterior parameter $\gamma \in [0, \frac{1}{2}]$ under the three
 different prior assumptions described in  \cref{priors_invg}.}
     \label{fig:ing_conju}
 \end{figure}
-
+\FloatBarrier
 \subsection{Poisson-Gamma conjugate case with unknown rate}
 
 The distribution of the power posterior of the following Bayesian model with
@@ -498,7 +497,7 @@ To further study the relation between sampling and $\gamma$ , we draw 50 subsamp
 \caption{Comparison of the distances for power posteriors and standard posteriors with subsampling. The dashed lines represents the Wasserstein distance and the parameter $\gamma$ at the saturation sample size. Poisson-Gamma conjugate case with unknown rate.}\label{fig:poisson_gamma_sub}
 \end{figure}
 
-We also calculated the saturation sample size, which is presented in Table \cref{tab:satsize}. The saturation sample size is reached at \(\gamma\) levels of 0.600 for a 95% credible interval and 0.700 for a 99% credible interval. This indicates that having 60 or 70 observations provides the same amount of information as the entire dataset.
+We also calculated the saturation sample size, which is presented in Table \cref{tab:satsize_poi}. The saturation sample size is reached at \(\gamma\) levels of 0.600 for a 95% credible interval and 0.700 for a 99% credible interval. This indicates that having 60 or 70 observations provides the same amount of information as the entire dataset.
 
 \begin{table}[h]
 	\caption{Saturation sample size and credible intervals for the Poisson Gamma model.}
@@ -513,7 +512,7 @@ We also calculated the saturation sample size, which is presented in Table \cref
 		0.770 & 0.700 & 70 & 100 & 99\% \\
 		\hline
 	\end{tabular}
-	\label{tab:satsize}
+	\label{tab:satsize_poi}
 \end{table}
 
 \FloatBarrier
@@ -592,7 +591,7 @@ skew-normal distribution.}\label{fig:ref_skew_normal_powpos}
 
 We now explain the importance of the concepts of power posteriors and saturation sample sizes. Power posteriors can be employed to specify prior distributions \citep{ohaganPropertiesIntrinsicFractional1997}. The power posteriors that occur before reaching the saturation sample size can be used to construct weakly informative priors. These priors allow the likelihood to dominate the posterior but still provide minimal information about the parameters. This is because the Wasserstein distance between the prior and the power posteriors is highest at lower values of $\gamma$, implying that at lower values of $\gamma$, the prior has a high influence on the posterior.
 
-Another important application of power posteriors is in determining appropriate sample sizes. For example, in clinical trials, interim analyses are conducted to adapt patient recruitment strategies based on the results of these analyses. One of these strategies is reducing the original sample size or recruiting more patients for a specific treatment arm \cite{Berry2006, Ryan2022}. The saturation sample size can be used to decide if recruiting more patients will make any difference or to stop patient recruitment. This is of enormous importance in the case of rare diseases where patient recruitment is difficult or if there are ethical concerns. The saturation sample size can also inform when to stop recruiting more survey participants.
+Another important application of power posteriors is in determining appropriate sample sizes. For example, in clinical trials, interim analyses are conducted to adapt patient recruitment strategies based on the results of these analyses. One of these strategies is reducing the original sample size or recruiting more patients for a specific treatment arm \citep{Berry2006, Ryan2022}. The saturation sample size can be used to decide if recruiting more patients will make any difference or to stop patient recruitment. This is of enormous importance in the case of rare diseases where patient recruitment is difficult or if there are ethical concerns. The saturation sample size can also inform when to stop recruiting more survey participants.
 
 
 
